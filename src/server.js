@@ -9,6 +9,7 @@ import ActivityChildRoute from "./routes/ActivityChild.routes.js";
 import authRoute from "./routes/auth.js";
 import usersRoute from "./routes/users.js";
 import ChildRoutes from './routes/Child.routes.js';
+import ChildAttentanceRoute from './routes/attendance.routes.js';
 
 dotenv.config();
 const api = express();
@@ -23,7 +24,7 @@ api.use(morgan("dev"));
 api.use("/api/users", usersRoute);
 
 //Child route
-app.use('/api/children', ChildRoutes);
+api.use('/api/children', ChildRoutes);
 
 
 // test route
