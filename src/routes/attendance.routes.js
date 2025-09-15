@@ -6,6 +6,7 @@ const r = Router();
 r.use(authMiddleware);
 
 r.get("/child/:childId", ctrl.listByChild);
+r.get("/recap/weekly/:childId", ctrl.recapWeekly);
 r.post("/", roleRequired("admin", "teacher"), ctrl.create);
 r.put("/:id", roleRequired("admin", "teacher"), ctrl.update);
 
