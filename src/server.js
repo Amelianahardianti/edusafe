@@ -9,9 +9,11 @@ import ActivityChildRoute from "./routes/ActivityChild.routes.js";
 import authRoute from "./routes/auth.js";
 import usersRoute from "./routes/users.js";
 import ChildRoutes from './routes/Child.routes.js';
-import ChildAttentanceRoute from './routes/attendance.routes.js';
+import attendanceRoute from './routes/attendance.routes.js';
 import BroadcastRoute from './routes/broadcast.routes.js';
 import FeedbackRoute from './routes/feedback.routes.js';
+import WeatherRoute from "./routes/weather.routes.js";
+import NotificationsRoute from "./routes/notifications.routes.js";
 
 dotenv.config();
 const api = express();
@@ -29,13 +31,28 @@ api.use("/api/users", usersRoute);
 api.use('/api/children', ChildRoutes);
 
 //Child attendance route
-api.use('/api/attendance', ChildAttentanceRoute);
+api.use('/api/attendance', attendanceRoute);
 
 //Broadcast route
 api.use('/api/broadcasts', BroadcastRoute);
 
 //Feedback route
 api.use('/api/feedbacks', FeedbackRoute);
+
+//Weather route
+api.use('/api/weather', WeatherRoute);
+
+//Notifications route
+api.use('/api/notifications', NotificationsRoute);
+
+//start weather notifier
+import { startWeatherNotifier } from "./jobs/weatherNotifier.js";
+startWeatherNotifier({
+  lat: process.env.SCHOOL_LATITUDE,
+  lon: process.env.SCHOOL_LONGITUDE,
+  hour: Number(process.env.WEATHER_NOTIFIER_HOUR || 9),
+  minute: Number(process.env.WEATHER_NOTIFIER_MINUTE || 0)
+});
 
 // test route
 api.get("/", (req, res) => res.json({ msg: "API jalan bro" }));
