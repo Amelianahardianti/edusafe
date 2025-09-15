@@ -11,7 +11,7 @@ import usersRoute from "./routes/users.js";
 import ChildRoutes from './routes/Child.routes.js';
 import ChildAttentanceRoute from './routes/attendance.routes.js';
 import BroadcastRoute from './routes/broadcast.routes.js';
-
+import FeedbackRoute from './routes/feedback.routes.js';
 
 dotenv.config();
 const api = express();
@@ -33,6 +33,9 @@ api.use('/api/attendance', ChildAttentanceRoute);
 
 //Broadcast route
 api.use('/api/broadcasts', BroadcastRoute);
+
+//Feedback route
+api.use('/api/feedbacks', FeedbackRoute);
 
 // test route
 api.get("/", (req, res) => res.json({ msg: "API jalan bro" }));
