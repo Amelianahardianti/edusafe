@@ -1,48 +1,38 @@
 /**
- * Weather service (OpenWeather One Call 3.0)
- * Requires env OPENWEATHER_API_KEY
+ * Weather service (WeatherAPI.com)
+ * Requires env WEATHERAPI_KEY
  * Uses native fetch (Node 18+)
  */
-const BASE = "https://api.openweathermap.org/data/3.0/onecall";
+const BASE = "https://api.weatherapi.com/v1/forecast.json";
 
 export async function getMiddayForecast(lat, lon) {
-  const key = process.env.OPENWEATHER_API_KEY;
-  if (!key) throw new Error("OPENWEATHER_API_KEY is not set");
-  const url = `${BASE}?lat=${lat}&lon=${lon}&exclude=current,minutely,daily,alerts&appid=${key}&units=metric`;
+  const key = process.env.WEATHERAPI_KEY;
+  if (!key) throw new Error("WEATHERAPI_KEY is not set");
+
+  const q = `${lat},${lon}`;
+  const url = `${BASE}?key=${key}&q=${encodeURIComponent(q)}&days=1&aqi=no&alerts=no`;
   const resp = await fetch(url);
-  if (!resp.ok) throw new Error("OpenWeather error: " + resp.status);
+  if (!resp.ok) throw new Error("WeatherAPI error: " + resp.status);
   const data = await resp.json();
 
-  const tz = data.timezone_offset || 0; // seconds
-  const now = new Date();
-  const localNow = new Date(now.getTime() + tz * 1000);
-  const y = localNow.getFullYear();
-  const m = localNow.getMonth();
-  const d = localNow.getDate();
+  // Hourly array for today
+  const hours = (data?.forecast?.forecastday?.[0]?.hour || []).map(h => ({
+    // h.time === "2025-09-17 11:00"
+    timeLocal: h.time?.slice(-5) || "", // "HH:MM"
+    temp: h.temp_c,
+    // WeatherAPI provides pop-like fields:
+    pop: typeof h.chance_of_rain === "number" ? h.chance_of_rain / 100 : (h.will_it_rain ? 0.6 : 0), // normalize to 0..1
+    weather: h.condition?.text || ""
+  }));
 
-  const startLocal = new Date(y, m, d, 11, 0, 0); // local 11:00
-  const endLocal   = new Date(y, m, d, 13, 0, 0); // local 13:00
-  const startUTC = new Date(startLocal.getTime() - tz * 1000);
-  const endUTC   = new Date(endLocal.getTime() - tz * 1000);
+  // Filter 11:00–13:00
+  const windowHours = hours.filter(h => h.timeLocal >= "11:00" && h.timeLocal < "13:00");
 
-  const hours = (data.hourly || []).filter(h => {
-    const t = new Date(h.dt * 1000);
-    return t >= startUTC && t < endUTC;
-  }).map(h => {
-    const local = new Date(h.dt * 1000 + tz * 1000);
-    return {
-      timeLocal: local.toISOString().substring(11,16), // HH:MM
-      temp: h.temp,
-      pop: h.pop || 0,
-      weather: h.weather && h.weather.length ? h.weather[0].main : ""
-    };
-  });
-
-  const rainLikely = hours.some(h => h.pop >= 0.4 || /rain/i.test(h.weather));
+  const rainLikely = windowHours.some(h => h.pop >= 0.4 || /rain|hujan/i.test(h.weather));
 
   return {
-    date: startLocal.toISOString().substring(0,10),
-    hours,
+    date: data?.forecast?.forecastday?.[0]?.date, // "YYYY-MM-DD"
+    hours: windowHours,
     rainLikely
   };
 }

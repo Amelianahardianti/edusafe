@@ -1,3 +1,4 @@
+import "dotenv/config";
 import express from "express";
 import mongoose from "mongoose";
 import cors from "cors";
@@ -14,6 +15,7 @@ import BroadcastRoute from './routes/broadcast.routes.js';
 import FeedbackRoute from './routes/feedback.routes.js';
 import WeatherRoute from "./routes/weather.routes.js";
 import NotificationsRoute from "./routes/notifications.routes.js";
+import { startWeatherNotifier } from "./jobs/weatherNotifier.js";
 
 dotenv.config();
 const api = express();
@@ -45,15 +47,6 @@ api.use('/api/weather', WeatherRoute);
 //Notifications route
 api.use('/api/notifications', NotificationsRoute);
 
-//start weather notifier
-import { startWeatherNotifier } from "./jobs/weatherNotifier.js";
-startWeatherNotifier({
-  lat: process.env.SCHOOL_LATITUDE,
-  lon: process.env.SCHOOL_LONGITUDE,
-  hour: Number(process.env.WEATHER_NOTIFIER_HOUR || 9),
-  minute: Number(process.env.WEATHER_NOTIFIER_MINUTE || 0)
-});
-
 // test route
 api.get("/", (req, res) => res.json({ msg: "API jalan bro" }));
 
@@ -77,6 +70,16 @@ api.get("/api/parent-only", authMiddleware, roleRequired("parent"), (req, res) =
   res.json({ msg: "ini halaman orang tua doang bro" });
 });
 
+// weather notifier job
+const LAT = parseFloat(process.env.SCHOOL_LAT);
+const LON = parseFloat(process.env.SCHOOL_LON);
+
+startWeatherNotifier({
+  lat: LAT,
+  lon: LON,
+  hour: Number(process.env.WEATHER_CHECK_HOUR || 9),
+  minute: Number(process.env.WEATHER_CHECK_MINUTE || 0),
+});
 
 // connect db
 mongoose.connect(process.env.MONGO_URI)

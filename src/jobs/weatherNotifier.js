@@ -1,27 +1,26 @@
 import SystemNotification from "../models/SystemNotification.js";
 import { getMiddayForecast } from "../services/weather.service.js";
 
-/**
- * Simple daily scheduler using setTimeout + setInterval (no deps)
- * It will run at HH:MM server local time (default 09:00).
- */
 export function startWeatherNotifier({ lat, lon, hour = 9, minute = 0 }) {
-  if (!process.env.OPENWEATHER_API_KEY) {
-    console.warn("[weatherNotifier] OPENWEATHER_API_KEY not set, notifier disabled.");
+  const latNum = typeof lat === "string" ? parseFloat(lat) : lat;
+  const lonNum = typeof lon === "string" ? parseFloat(lon) : lon;
+
+  if (!Number.isFinite(latNum) || !Number.isFinite(lonNum)) {
+    console.warn("[weatherNotifier] lat/lon missing, notifier disabled.");
     return;
   }
-  if (!lat || !lon) {
-    console.warn("[weatherNotifier] lat/lon missing, notifier disabled.");
+  if (!process.env.WEATHERAPI_KEY) {
+    console.warn("[weatherNotifier] WEATHERAPI_KEY not set, notifier disabled.");
     return;
   }
 
   const run = async () => {
     try {
-      const forecast = await getMiddayForecast(lat, lon);
+      const forecast = await getMiddayForecast(latNum, lonNum);
       if (forecast.rainLikely) {
         const key = `weather-${forecast.date}`;
-        const from = new Date(`${forecast.date}T02:00:00.000Z`); // start early
-        const to   = new Date(`${forecast.date}T15:00:00.000Z`); // expire after school
+        const from = new Date(`${forecast.date}T02:00:00.000Z`);
+        const to   = new Date(`${forecast.date}T15:00:00.000Z`);
 
         await SystemNotification.create({
           title: "Himbauan Hujan Siang Ini",
@@ -32,10 +31,7 @@ export function startWeatherNotifier({ lat, lon, hour = 9, minute = 0 }) {
           validTo: to,
           dedupeKey: key
         }).catch(err => {
-          if (err && err.code === 11000) {
-            // already created today
-            return;
-          }
+          if (err?.code === 11000) return; // duplikat harian → aman
           throw err;
         });
       }
