@@ -4,7 +4,7 @@ import { getMiddayForecast } from "../services/weather.service.js";
 
 const r = Router();
 //untuk uji Postman tanpa login, bisa komentari baris di bawah
-// r.use(authMiddleware);
+r.use(authMiddleware);
 
 r.get("/midday", async (req, res, next) => {
   try {
