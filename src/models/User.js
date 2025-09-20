@@ -1,10 +1,14 @@
 import mongoose from "mongoose";
 
+
 const userSchema = new mongoose.Schema({
   name: String,
-  email: { type: String, unique: true },
-  password: String,
-  role: { type: String, enum: ["admin", "teacher", "parent"], default: "parent" }
-});
+  email: { type: String, required: true, lowercase: true, trim: true, index: true },
+  password: { type: String, required: true, select: true },
+  role: String,
+}, { timestamps: true });
 
-export default mongoose.model("User", userSchema);
+// paksa nama koleksi = 'users'
+const User = mongoose.model('User', userSchema, 'users');
+export default User;
+

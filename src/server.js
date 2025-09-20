@@ -17,6 +17,7 @@ import WeatherRoute from "./routes/weather.routes.js";
 import NotificationsRoute from "./routes/notifications.routes.js";
 import { startWeatherNotifier } from "./jobs/weatherNotifier.js";
 
+
 dotenv.config();
 const api = express();
 
@@ -25,6 +26,7 @@ api.use(express.json());
 api.use(cors({ origin: true, credentials: true }));
 api.use(cookieParser());
 api.use(morgan("dev"));
+
 
 //user route
 api.use("/api/users", usersRoute);
@@ -70,6 +72,8 @@ api.get("/api/parent-only", authMiddleware, roleRequired("parent"), (req, res) =
   res.json({ msg: "ini halaman orang tua doang bro" });
 });
 
+api.use("/api/users", usersRoute);
+
 // weather notifier job
 const LAT = parseFloat(process.env.SCHOOL_LAT);
 const LON = parseFloat(process.env.SCHOOL_LON);
@@ -82,11 +86,18 @@ startWeatherNotifier({
 });
 
 // connect db
-mongoose.connect(process.env.MONGO_URI)
-  .then(() => {
-    console.log("MongoDB connected");
+
+
+(async () => {
+  try {
+    await mongoose.connect(process.env.MONGO_URI, { dbName: "edusafe" });
+    console.log("Mongo connected ->", mongoose.connection.name);
+
     api.listen(process.env.PORT, () =>
       console.log("API running on port " + process.env.PORT)
     );
-  })
-  .catch((err) => console.error(err));
+  } catch (err) {
+    console.error("Mongo connect error:", err);
+    process.exit(1);
+  }
+})();
