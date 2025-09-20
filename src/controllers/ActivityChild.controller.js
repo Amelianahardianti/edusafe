@@ -48,6 +48,7 @@ export const detail = async (req, res, next) => {
   }
 };
 
+//membuat data anak
 export const create = async (req, res, next) => {
   try {
     const payload = {
@@ -67,6 +68,7 @@ export const create = async (req, res, next) => {
   }
 };
 
+//mengubah data anak
 export const update = async (req, res, next) => {
   try {
     const item = await ActivityChild.findById(req.params.id);
@@ -89,6 +91,8 @@ export const update = async (req, res, next) => {
     next(err);
   }
 };
+
+//menghapus data anak
 
 export const remove = async (req, res, next) => {
   try {

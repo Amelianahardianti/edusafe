@@ -1,13 +1,23 @@
+// src/models/Child.js
 import mongoose from "mongoose";
 
-// ganti birthdate -> birthDate, dan parentID wajib (single)
-const Childschema = new mongoose.Schema({
-  name: { type: String, required: true },
-  birthDate: { type: Date, required: true },
-  parentID: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+const ChildSchema = new mongoose.Schema({
+  name:      { type: String, required: true, trim: true },
+  birthDate: { type: Date,   required: true },
+  parentID:  { type: mongoose.Schema.Types.ObjectId, ref: "User",  required: true },
+  classId:   { type: mongoose.Schema.Types.ObjectId, ref: "Class", required: true }
 }, { timestamps: true });
 
-// cegah duplikat anak sama (nama+tanggal lahir) pada parent yang sama
-Childschema.index({ name: 1, birthDate: 1, parentID: 1 }, { unique: true });
+ChildSchema.index({ classId: 1 });
+ChildSchema.index({ parentID: 1, name: 1 }, { unique: false }); // ubah ke true kalau mau cegah duplikat keras
 
-export default mongoose.model("Child", Childschema);
+ChildSchema.set("toJSON", {
+  transform: (_, doc) => {
+    doc.id = doc._id;
+    delete doc._id;
+    delete doc.__v;
+    return doc;
+  }
+});
+
+export default mongoose.model("Child", ChildSchema);

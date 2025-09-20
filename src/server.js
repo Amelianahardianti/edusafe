@@ -16,6 +16,8 @@ import FeedbackRoute from './routes/feedback.routes.js';
 import WeatherRoute from "./routes/weather.routes.js";
 import NotificationsRoute from "./routes/notifications.routes.js";
 import { startWeatherNotifier } from "./jobs/weatherNotifier.js";
+import Class from "./models/Class.js";
+import ClassRoute from "./routes/Class.route.js";
 
 
 dotenv.config();
@@ -33,6 +35,9 @@ api.use("/api/users", usersRoute);
 
 //Child route
 api.use('/api/children', ChildRoutes);
+
+//Class route
+api.use('/api/classes', ClassRoute);
 
 //Child attendance route
 api.use('/api/attendance', attendanceRoute);
