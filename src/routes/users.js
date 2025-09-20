@@ -7,10 +7,10 @@ const r = Router();
 r.use(authMiddleware);
 r.use(roleRequired("admin"));
 
-r.get("/", ctrl.getUsers);
-r.get("/:id", ctrl.detail);
-r.post("/",  ctrl.create);
-r.patch("/:id", ctrl.update);
-r.delete("/:id", ctrl.remove);
+r.get("/", ctrl.getUsers); //admin lihat semua user
+r.get("/:id", ctrl.detail); //admin lihat detail user
+r.post("/",  ctrl.create); //admin bikin akun baru
+r.patch("/:id", ctrl.update); //admin ubah data user
+r.delete("/:id", ctrl.remove); //admin hapus user
 
 export default r;

@@ -5,15 +5,15 @@ import { authMiddleware, roleRequired } from "../middlewares/authMiddleware.js";
 
 
 const ActivityChildSchema = new mongoose.Schema({
-    ChildID: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-    Activity: { type: String, required: true },
-    TeacherID: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-    Date: { type: Date, required: true },
-    TimeStart: { type: String, required: true },
-    TimeEnd: { type: String, required: true },
-    AdditionalNotes: { type: String }
-}, {timestamps: true}
-);
+  ChildID: { type: mongoose.Schema.Types.ObjectId, ref: 'Child', required: true },
+  Activity: { type: String, required: true },
+  TeacherID: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+  Date: { type: Date, default: Date.now },
+  TimeStart: { type: String, required: true },
+  TimeEnd: { type: String, required: true },
+  AdditionalNotes: { type: String }
+}, { timestamps: true });
+
 
 
 export default mongoose.model("ActivityChild", ActivityChildSchema);
