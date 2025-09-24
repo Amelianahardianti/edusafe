@@ -6,7 +6,7 @@ import { cacheGet, cacheSet, cacheFor } from "../middlewares/cache.js";
 const r = Router();
 r.use(authMiddleware);
 
-r.get("/", cacheFor(300), cacheGet, ctrl.listActive, cacheSet);
+r.get("/", cacheFor(300), cacheGet, cacheSet, ctrl.listActive);
 
 r.post("/", roleRequired("admin","teacher"), ctrl.create);
 r.put("/:id", roleRequired("admin","teacher"), ctrl.update);
