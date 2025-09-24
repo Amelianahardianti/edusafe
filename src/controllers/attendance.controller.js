@@ -1,5 +1,7 @@
 import mongoose from "mongoose";
 import Attendance from "../models/Attendance.js";
+import { cacheDelPrefix } from "../middlewares/cache.js";
+
 
 /** Helper: normalisasi ke awal hari (UTC) untuk konsistensi unik harian */
 function normalizeDateToUTCStart(d) {
@@ -34,6 +36,7 @@ export const create = async (req, res, next) => {
       checkIn: status === "hadir" ? (checkIn ? new Date(checkIn) : new Date()) : undefined,
       teacherID,
     });
+    await cacheDelPrefix(`/api/attendance/recap/weekly/${String(childID)}`);
     res.status(201).json(doc);
   } catch (e) {
     if (e.code === 11000) {
