@@ -1,4 +1,4 @@
-# Aplikasi Edusafe
+# Aplikasi Website Edusafe
 
 ## Deskripsi Aplikasi
 Edusafe adalah layanan backend berbasis **Node.js (Express)** dengan **MongoDB (Mongoose)** untuk memfasilitasi komunikasi dan pemantauan aktivitas siswa antara **Admin, Guru, dan Orang Tua**.  
