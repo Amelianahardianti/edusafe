@@ -13,7 +13,7 @@ Fitur utama sistem meliputi:
 - Integrasi cuaca menggunakan **WeatherAPI** dengan **Redis** untuk caching
 
 ## Nama Kelompok & Anggota
-**Kelompok 6 - PAW**
+**Kelompok 6 - Pengembangan Aplikasi Website**
 - Ameliana Hardianti Utari (23/513968/TK/56455)
 - Muhammad Khaira Rahmadya Nauval (23/521078/TK/57466)
 - Muhammad Mulat Adi Wardhana (23/522856/TK/57765)
