@@ -86,4 +86,4 @@ edusafe/
 - **WeatherAPI** — integrasi data cuaca 
 
 ## URL Laporan
-
+https://drive.google.com/drive/folders/1uBPdrFWQ9Cn4EAWuQxt27FGU5IRjE_ew?usp=sharing
