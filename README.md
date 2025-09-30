@@ -21,7 +21,7 @@ Fitur utama sistem meliputi:
 - Rozan Gangsar Adibrata (23/521626/TK/57547)
 
 ## Struktur Folder & File
-
+```
 edusafe/
 ├── src/
 │ ├── controllers/
@@ -76,6 +76,7 @@ edusafe/
 ├── package-lock.json
 ├── package.json
 └── README.md
+```
 
 ## Teknologi yang Digunakan  
 - **Node.js + Express** — framework backend  
