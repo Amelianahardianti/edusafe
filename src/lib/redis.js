@@ -2,6 +2,10 @@
 import 'dotenv/config';
 import IORedis from 'ioredis';
 
+// import dns, { setDefaultResultOrder } from 'node:dns';
+// dns.setServers(['1.1.1.1', '8.8.8.8', '9.9.9.9']);   // Cloudflare, Google, Quad9
+// setDefaultResultOrder('ipv4first');   
+
 function buildRedisFromUrl(urlRaw) {
   if (!urlRaw) throw new Error('REDIS_URL is empty');
   const url = urlRaw.trim();
@@ -10,13 +14,11 @@ function buildRedisFromUrl(urlRaw) {
   const u = new URL(url);
   const hostname = u.hostname;
 
-  // TLS options: SNI + minimal TLS 1.2 (Redis Cloud)
   const tlsOpts = isTls ? { servername: hostname, minVersion: 'TLSv1.2' } : undefined;
 
   const masked = url.replace(/(\/\/.*:)([^@]+)(@)/, (_, a, _b, c) => a + '***' + c);
   console.log('[redis] using URL:', masked, ' tls=', !!tlsOpts);
 
-  // Tambahkan family=0 agar bebas IPv4/IPv6 (beberapa jaringan Windows rewel)
   return new IORedis(url, { tls: tlsOpts, family: 0, maxRetriesPerRequest: null, enableReadyCheck: true });
 }
 
