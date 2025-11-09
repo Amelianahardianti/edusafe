@@ -92,17 +92,62 @@ startWeatherNotifier({
 
 // connect db
 
-
 (async () => {
   try {
-    await mongoose.connect(process.env.MONGO_URI, { dbName: "edusafe" });
-    console.log("Mongo connected ->", mongoose.connection.name);
+    console.log('🔌 Connecting to MongoDB...');
+    console.log('📍 MONGO_URI:', process.env.MONGO_URI ? '✅ Set' : '❌ NOT SET');
+    
+    // Test connection dengan timeout lebih panjang
+    const startTime = Date.now();
+    console.log('⏳ Attempting connection...');
+    
+    await mongoose.connect(process.env.MONGO_URI, { 
+      dbName: "edusafe",
+      serverSelectionTimeoutMS: 60000, // 60 seconds (lebih lama lagi)
+      socketTimeoutMS: 45000,
+      connectTimeoutMS: 60000,
+      maxPoolSize: 10,
+      retryWrites: true,
+      w: 'majority'
+    });
+    
+    const connectionTime = ((Date.now() - startTime) / 1000).toFixed(2);
+    console.log("✅ Mongo connected ->", mongoose.connection.name);
+    console.log("✅ MongoDB ready! (took " + connectionTime + "s)");
+    console.log("📊 Database:", mongoose.connection.db.databaseName);
 
-    api.listen(process.env.PORT, () =>
-      console.log("API running on port " + process.env.PORT)
-    );
+    api.listen(process.env.PORT, () => {
+      console.log("");
+      console.log("🚀 ========================================");
+      console.log("🚀 API running on port " + process.env.PORT);
+      console.log("📡 Test API: http://localhost:" + process.env.PORT);
+      console.log("📡 Health check: http://localhost:" + process.env.PORT + "/");
+      console.log("🚀 ========================================");
+      console.log("");
+    });
   } catch (err) {
-    console.error("Mongo connect error:", err);
+    console.error("");
+    console.error("❌ ========================================");
+    console.error("❌ Mongo connect error:", err.name);
+    console.error("❌ Message:", err.message);
+    console.error("❌ ========================================");
+    
+    // Berikan saran berdasarkan error
+    if (err.message.includes('ENOTFOUND') || err.message.includes('getaddrinfo')) {
+      console.error("💡 Saran: Cek koneksi internet atau DNS");
+      console.error("   Coba ping: ping paw.mdfrkop.mongodb.net");
+    } else if (err.message.includes('authentication failed') || err.message.includes('bad auth')) {
+      console.error("💡 Saran: Cek username/password MongoDB");
+      console.error("   Username: amelianahardiantiutari_db_user");
+    } else if (err.message.includes('timeout') || err.message.includes('serverSelectionTimeoutMS')) {
+      console.error("💡 Saran: IP mungkin belum aktif di MongoDB Atlas");
+      console.error("   1. Tunggu 2-3 menit setelah add IP");
+      console.error("   2. Cek MongoDB Atlas -> Network Access");
+      console.error("   3. Pastikan IP Anda ada di list");
+      console.error("   4. Atau gunakan 0.0.0.0/0 untuk allow all");
+    }
+    
+    console.error("");
     process.exit(1);
   }
 })();
