@@ -1,12 +1,12 @@
 // routes/auth.routes.js
 import { Router } from "express";
-import { ping, changePassword, login } from "../controllers/auth.controller.js";
-import { authMiddleware } from "../middlewares/authMiddleware.js";
+import { ping, changePassword, login, register } from "../controllers/auth.controller.js";
+import { authMiddleware, roleRequired } from "../middlewares/authMiddleware.js";
 
 const r = Router();
 
 r.get("/ping", ping);
-//r.post("/register", register); //gw hapus karena gak perlu registrasi user baru selain admin
+r.post("/register", authMiddleware,roleRequired("admin"), register); //gw hapus karena gak perlu registrasi user baru selain admin
 r.post("/login", login);
 r.patch("/change-password", authMiddleware, changePassword);
 
