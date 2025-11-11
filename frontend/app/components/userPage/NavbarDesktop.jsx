@@ -1,12 +1,14 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
+import Saran from "@/app/components/userPage/Saran";
 
 const Navbar = () => {
   const router = useRouter();
   const pathname = usePathname();
+  const [isSaranOpen, setIsSaranOpen] = useState(false);
 
   // Detect current base route: /parent, /teacher, or /admin
   const baseRoute = pathname.startsWith("/parent")
@@ -18,6 +20,7 @@ const Navbar = () => {
     : "";
 
   return (
+    <>
     <div className="bg-[#0B3869] lg:flex justify-between items-center pl-[2vw] h-[5vw] w-full fixed top-0 z-50 shadow-md hidden">
       {/* Logo */}
       <Link href={`${baseRoute || "/"}`} className="inline-block relative">
@@ -62,11 +65,7 @@ const Navbar = () => {
 
         <li
           className="cursor-pointer font-code hover:bg-[#FF3B8F] hover:text-black flex items-center justify-center h-full w-[10vw] bg-[#0B3869] text-white"
-          onClick={() =>
-            router.push(
-              "https://backend-tc-25-production.up.railway.app/auth/login"
-            )
-          }
+           onClick={() => setIsSaranOpen(true)}
         >
           <span className="block w-full h-full text-center leading-[5vw]">
             Kritik & Saran
@@ -74,6 +73,8 @@ const Navbar = () => {
         </li>
       </ul>
     </div>
+    <Saran open={isSaranOpen} onClose={() => setIsSaranOpen(false)} />
+    </>
   );
 };
 
