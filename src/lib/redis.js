@@ -2,9 +2,6 @@
 import 'dotenv/config';
 import IORedis from 'ioredis';
 
-let redis = null;
-let redisConnected = false;
-
 function buildRedisFromUrl(urlRaw) {
   if (!urlRaw) {
     console.warn('[redis] REDIS_URL not set, Redis disabled');
@@ -16,63 +13,13 @@ function buildRedisFromUrl(urlRaw) {
   const u = new URL(url);
   const hostname = u.hostname;
 
-  // TLS options: SNI + minimal TLS 1.2 (Redis Cloud)
   const tlsOpts = isTls ? { servername: hostname, minVersion: 'TLSv1.2' } : undefined;
 
   const masked = url.replace(/(\/\/.*:)([^@]+)(@)/, (_, a, _b, c) => a + '***' + c);
   console.log('[redis] using URL:', masked, ' tls=', !!tlsOpts);
 
   // Tambahkan family=0 agar bebas IPv4/IPv6 (beberapa jaringan Windows rewel)
-  // Tambahkan reconnectOnError dan retryStrategy untuk handle connection issues
-  const client = new IORedis(url, { 
-    tls: tlsOpts, 
-    family: 0, 
-    maxRetriesPerRequest: null, 
-    enableReadyCheck: true,
-    retryStrategy: (times) => {
-      if (times > 3) {
-        console.warn('[redis] Max retries reached, Redis will work in degraded mode');
-        return null; // Stop retrying
-      }
-      const delay = Math.min(times * 50, 2000);
-      return delay;
-    },
-    reconnectOnError: (err) => {
-      const targetError = 'READONLY';
-      if (err.message.includes(targetError)) {
-        return true;
-      }
-      return false;
-    },
-    connectTimeout: 10000,
-    lazyConnect: false,
-    showFriendlyErrorStack: true
-  });
-
-  client.on('connect', () => {
-    redisConnected = true;
-    console.log('[redis] connected');
-  });
-
-  client.on('ready', () => {
-    redisConnected = true;
-    console.log('[redis] ready');
-  });
-
-  client.on('error', (e) => {
-    redisConnected = false;
-    // Hanya log error penting, jangan spam
-    if (e.code !== 'ECONNREFUSED' && !e.message.includes('getaddrinfo')) {
-      console.error('[redis] error:', e.message);
-    }
-  });
-
-  client.on('close', () => {
-    redisConnected = false;
-    console.log('[redis] connection closed');
-  });
-
-  return client;
+  return new IORedis(url, { tls: tlsOpts, family: 0, maxRetriesPerRequest: null, enableReadyCheck: true });
 }
 
 function buildRedisFromParts() {
