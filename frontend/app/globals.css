@@ -55,3 +55,7 @@ html {
 .font-lato {
   font-family: var(--font-lato), sans-serif;
 }
+
+.font-jakarta {
+  font-family: var(--font-jakarta), sans-serif;
+}

@@ -1,4 +1,4 @@
-import { Inter, Nunito, Lato } from "next/font/google";
+import { Inter, Nunito, Lato, Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 import Footer from "@/app/components/allPage/Footer";
 
@@ -19,6 +19,12 @@ const lato = Lato({
   variable: "--font-lato",
 });
 
+const plusJakartaSans = Plus_Jakarta_Sans({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700", "800"],
+  variable: "--font-jakarta",
+});
+
 export const metadata = {
   title: "EduSafe - Sistem Komunikasi Sekolah",
   description: "Platform komunikasi antara Admin, Guru, dan Orang Tua",
@@ -27,7 +33,7 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="id">
-      <body className={`${inter.variable} ${nunito.variable} ${lato.variable} font-sans antialiased`}>
+      <body className={`${inter.variable} ${nunito.variable} ${lato.variable} ${plusJakartaSans.variable} font-sans antialiased`}>
         {children}
         <Footer />
       </body>
