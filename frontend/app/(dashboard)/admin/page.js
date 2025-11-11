@@ -6,19 +6,7 @@ export default function AdminDashboard() {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <header className="bg-white shadow-sm border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <h1 className="text-xl font-semibold text-gray-800">EduSafe - Admin Dashboard</h1>
-            <div className="flex items-center gap-4">
-              <span className="text-sm text-gray-600">Admin</span>
-              <button className="px-4 py-2 text-sm text-gray-700 hover:text-gray-900">
-                Keluar
-              </button>
-            </div>
-          </div>
-        </div>
-      </header>
+ 
 
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
