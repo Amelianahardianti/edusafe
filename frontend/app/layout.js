@@ -1,5 +1,6 @@
 import { Inter, Nunito, Lato } from "next/font/google";
 import "./globals.css";
+import Footer from "@/app/components/allPage/Footer";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -28,6 +29,7 @@ export default function RootLayout({ children }) {
     <html lang="id">
       <body className={`${inter.variable} ${nunito.variable} ${lato.variable} font-sans antialiased`}>
         {children}
+        <Footer />
       </body>
     </html>
   );
