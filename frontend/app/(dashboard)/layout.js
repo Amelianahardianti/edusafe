@@ -6,7 +6,7 @@ export default function DashboardLayout({ children }) {
     <>
       <Navbar />
     
-      <div className=" translate-y-[12.5vh]"
+      <div className=" "
         // className={`bg-[url('/background.png')] ${mechsuit.className} ${code.className}`}
       >
         {children}

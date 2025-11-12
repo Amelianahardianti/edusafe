@@ -2,6 +2,8 @@
 import 'dotenv/config';
 import IORedis from 'ioredis';
 
+
+
 function buildRedisFromUrl(urlRaw) {
   if (!urlRaw) {
     console.warn('[redis] REDIS_URL not set, Redis disabled');
