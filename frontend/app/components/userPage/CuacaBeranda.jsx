@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { motion }  from 'framer-motion';
 import weatherData from "../mockData/data_center";
 
-const Cuaca = ( {weather} ) => {
+const CuacaBeranda = ( {weather} ) => {
     const [currentTime, setCurrentTime] = useState(new Date());
     const [weatherForecast, setWeatherForecast] = useState([]);
     useEffect(() => {
@@ -66,15 +66,16 @@ const Cuaca = ( {weather} ) => {
                         whileHover={{ scale: 1.1 }}
                         whileTap={{ scale: 0.9 }}
                         className=" bg-[#0B3869] rounded-lg p-[1vh] text-white"
+                        
                     >
                         Lebih Lanjut 
                     </motion.button>
 
                 </div>
             </div>
-            <div className="grid lg:grid-flow-row lg:grid-cols-6 bg-yellow-100 h-auto font-bold text-center ">
+            <div className="grid lg:grid-flow-row lg:grid-cols-6 h-auto font-bold text-center ">
                   {weatherForecast.map((item, index) => (
-                    <div key={index} className="flex flex-col items-center ">
+                    <div key={index} className={`flex flex-col items-center ${index % 2 === 0 ? 'bg-yellow-200' : 'bg-white'}`}>
                         <div className="">{item.hour}</div>
                        icon
                         <div className="capitalize">{item.weather}</div>
@@ -85,5 +86,5 @@ const Cuaca = ( {weather} ) => {
         </div>
     )
 }
-export default Cuaca;
+export default CuacaBeranda;
     
