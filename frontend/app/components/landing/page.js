@@ -59,6 +59,7 @@ export default function LandingPage() {
               Welcome to<br />EduSafe.
             </h1>
 
+            <Link href="/login" className="no-underline">
             <motion.button
               className="mt-8 w-[260px] h-[66px] rounded-[60px] border border-white/25 
                          bg-[#333] text-white text-[24px] font-semibold
@@ -69,6 +70,7 @@ export default function LandingPage() {
             >
               Get started
             </motion.button>
+            </Link>
           </div>
 
           {/* RIGHT — HERO TEXT */}
