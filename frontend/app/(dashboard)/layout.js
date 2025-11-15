@@ -6,7 +6,7 @@ export default function DashboardLayout({ children }) {
     <>
       <Navbar />
     
-      <div className=" "
+      <div className=" pt-[10vh]"
         // className={`bg-[url('/background.png')] ${mechsuit.className} ${code.className}`}
       >
         {children}
