@@ -5,27 +5,29 @@ import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
 
+
 export default function LandingPage() {
   return (
     <div className="relative  min-h-screen overflow-hidden">
 
-    {/* Background Image */}
-    <div className="absolute inset-0 -z-10">
-      <Image
-        src="/assets/images/kindergarten.png"
-        alt="Children in a classroom setting"
-        height={1080}
-        width={1920}
-        priority
-        className="object-cover object-[center top]"
-      />
-      <div className="absolute inset-0 bg-black/25"></div>
-    </div>
+      {/* Background Image */}
+      <div className=" fixed inset-0 -z-10 w-screen h-screen overflow-hidden">
+        <Image
+          src="/assets/images/kindergarten.png"
+          alt="Children in a classroom setting"
+          height={1920}
+          width={1080}
 
+          
+          
+          className=" w-full h-full absolute object-cover object-[center top] "
+        />
+        <div className="absolute inset-0 bg-black/30"></div>
+      </div>
 
 
       {/* = NAVBAR = */}
-      <nav className="absolute top-0 left-0 w-full h-[139px] flex items-center justify-between px-[41px] z-20">
+      <nav className="top-0 left-0 w-full h-[139px] flex items-center justify-between px-[41px] z-20">
         
         {/* LOGO */}
         <Image
@@ -44,31 +46,26 @@ export default function LandingPage() {
       </nav>
 
       {/* = HERO CONTENT = */}
-      <section className="relative z-10 flex items-center justify-center min-h-screen">
+      <section className="relative z-10 flex items-center justify-center pb-[20vh] min-h-screen">
         
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 max-w-7xl w-full px-[41px]">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-[1vh] max-w-7xl w-full px-[41px] ">
 
           {/* LEFT — HERO TITLE */}
-          <div>
+          <div className="flex flex-col md:items-start items-center  ">
             <h1
-              className="text-white font-lato font-black text-[88px] leading-[90px] tracking-tight"
-              style={{
-                textShadow: "0px 4px 4px rgba(0,0,0,0.25)",
-                WebkitTextStroke: "1px #50B0E5",
-              }}
+              className="text-white text-[60px] lg:text-[88px] lg:text-left text-center font-bold "
+              
             >
               Welcome to<br />EduSafe.
             </h1>
 
             <motion.button
               className="mt-8 w-[260px] h-[66px] rounded-[60px] border border-white/25 
-                         bg-[#333] text-white font-lato text-[24px] font-semibold tracking-tight
-                         hover:-translate-y-1 hover:bg-[#3b3b3b] 
-                         hover:shadow-[0_20px_45px_rgba(80,176,229,0.25)]
-                         transition-all"
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.5, delay: 0.7 }}
+                         bg-[#333] text-white text-[24px] font-semibold
+                        "
+              initial={{ opacity: 1, scale: 0.9 }}
+              whileHover={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.2}}
             >
               Get started
             </motion.button>
@@ -158,10 +155,18 @@ export default function LandingPage() {
               dan pengembangan diri.
             </p>
 
-            <button className="px-12 py-3 border-2 border-brand-blue-dark rounded-full text-brand-blue-dark 
+            <motion.button
+            initial={{ backgroundColor: "#ffffff" }}
+              whileHover={{ backgroundColor: "#FFC0CB"}}
+              transition={{ duration: 10 }}
+            className="px-12 py-3 border-2 border-brand-blue-dark rounded-full text-brand-blue-dark 
                                hover:bg-brand-blue-dark hover:text-white transition-colors text-xl">
+              <motion.div
+              
+              className="w-full h-full ">
               Login
-            </button>
+             </motion.div>
+            </motion.button>
           </div>
         </div>
       </section>
