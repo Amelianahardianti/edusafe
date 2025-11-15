@@ -1,7 +1,6 @@
 import bcrypt from 'bcryptjs';
 import user from '../models/User.js';
 
-//GET/api/users? role=teacher/parent
 export const getUsers = async (req, res) =>{
   const q = {};
   if (req.query.role)  q.role = req.query.role;
@@ -10,15 +9,12 @@ export const getUsers = async (req, res) =>{
 };
 
 
-//GET/api/users/:id
 export const detail = async (req, res) =>{
   const u = await user.findById(req.params.id).select('-password');
   if(!u) return res.status(404).json({msg: 'not found'});
   res.json(u);
 };
 
-//post/api/users (admin membuat user baru)
-// POST /api/users (admin membuat user baru)
 export const create = async (req, res) => {
   try {
     const { name, email, password, role } = req.body;
@@ -43,13 +39,11 @@ export const create = async (req, res) => {
     if (error.code === 11000) {
       return res.status(400).json({ msg: "email already exists" });
     }
-    // kalau error lain, lempar aja biar ketangkep express
     throw error;
   }
 };
 
 
-//patch/api/users/:id (admin mengubah user)
 export const update = async (req, res) => {
   const { name, email, password, role } = req.body;
   const update = {};
@@ -75,7 +69,6 @@ export const update = async (req, res) => {
 };
 
 
-//delete/api/users/:id (admin menghapus user)
 export const remove = async (req, res) =>{
     const del = await user.findByIdAndDelete(req.params.id);
     if(!del) return res.status(404).json({msg: 'not found'});

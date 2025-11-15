@@ -31,7 +31,7 @@ export function startWeatherNotifier({ lat, lon, hour = 9, minute = 0 }) {
           validTo: to,
           dedupeKey: key
         }).catch(err => {
-          if (err?.code === 11000) return; // duplikat harian → aman
+          if (err?.code === 11000) return;
           throw err;
         });
       }
