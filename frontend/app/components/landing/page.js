@@ -7,16 +7,18 @@ import { motion } from "framer-motion";
 
 export default function LandingPage() {
   return (
-    <div className="relative w-full min-h-screen overflow-hidden">
+    <div className="relative  min-h-screen overflow-hidden">
 
       {/* Background Image */}
-      <div className="absolute inset-0 -z-10">
+      <div className=" absolute inset-0 -z-10">
         <Image
           src="/assets/images/kindergarten.png"
           alt="Children in a classroom setting"
-          fill
+          height={1080}
+          width={1920}
+          fit
           priority
-          className="object-cover object-[center top]"
+          className="object-cover object-[center top] "
         />
         <div className="absolute inset-0 bg-black/25"></div>
       </div>
