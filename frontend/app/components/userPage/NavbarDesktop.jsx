@@ -19,6 +19,13 @@ const Navbar = () => {
     ? "/admin"
     : "";
 
+  const handleLogout = () => {
+    if (typeof window !== "undefined") {
+      localStorage.removeItem("token");
+      localStorage.removeItem("userRole");
+    }
+    router.push("/");
+  };
   return (
     <>
     <div className="bg-[#0B3869] lg:flex justify-between items-center pl-[2vw] h-[10vh] w-full fixed top-0 z-50 shadow-md hidden">
@@ -71,8 +78,9 @@ const Navbar = () => {
             Kritik & Saran
           </span>
         </li>
-         <li className="cursor-pointer font-code bg-[#0B3869] hover:bg-[#FF3B8F] hover:text-black text-white flex items-center justify-center h-full w-[9vw]">
-          <Link href={`${baseRoute}/logout`} className="block w-full h-full text-center leading-[5vw]">
+         <li className="cursor-pointer font-code bg-[#0B3869] hover:bg-[#FF3B8F] hover:text-black text-white flex items-center justify-center h-full w-[9vw]"
+          onClick={handleLogout}>
+          <Link href="#" className="block w-full h-full text-center leading-[5vw]">
             Logout
           </Link>
         </li>
