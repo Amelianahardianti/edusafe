@@ -4,10 +4,48 @@ import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { motion }  from 'framer-motion';
-
+import { useRouter } from 'next/navigation';
+import { apiFetch} from '@/lib/api';
 
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const router = useRouter();
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setError('');
+    try {
+      const data = await apiFetch('/api/auth/login', {
+        method: 'POST',
+        body: JSON.stringify({ email, password }),
+        headers: { 'Content-Type': 'application/json' },
+      });
+      
+      if(typeof window !== 'undefined') {
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('userRole', data.user.role);
+      }
+
+      const role = data.user.role;
+      if (role === 'admin') {
+        router.push('/admin');}
+      else if (role === 'teacher'){
+         router.push('/teacher');}
+      else if (role === 'parent') {
+        router.push('/parent');}
+      else {
+        router.push('/');}
+    } catch (err) {
+      setError(err.message || 'Email atau Password salah!');
+    } finally {
+      setLoading(false);
+    }
+  };
  return (
 <div>
   <Link href="/" className="absolute left-4 sm:left-6 lg:left-[41px] top-4 sm:top-6 lg:top-[25px] items-center flex gap-4">
@@ -24,8 +62,11 @@ export default function LoginPage() {
   <div className="h-screen w-screen justify-center items-center flex flex-col">
     
      <div className="border grid p-[3vh] rounded-lg gap-1 border-gray-300">
-     <div className='bg-white font-bold text-3xl text-[#313131]'>Login</div>
+     <div className='bg-white font-bold text-3xl text-[#313131]'>
+      Login
+      </div>
      <div className='bg-white text-[#313131]'>Cari tahu kegiatan anak anda!</div>
+     {error && <div className="bg-red-100 text-red-700 text-sm rounded-md px-3 py-2 mt-2">{error}</div>}
            <div className=" bg-white pt-5 justify-center">
              
          </div>
@@ -35,12 +76,16 @@ export default function LoginPage() {
              <label htmlFor="inputField" className="block text-sm font-medium text-gray-700">
                  Email
              </label>
-             <input
-                 type="text"
-                 id="inputField"
-                 className="block w-full rounded-md border border-gray-300 px-3 py-2"
-                 placeholder="Type something..."
-             />
+              <input
+                type="email"
+                id="email"
+                className="block w-full rounded-md border border-gray-300 px-3 py-2"
+                placeholder="Masukkan email anda"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
+
          </form>
          
          </div>
@@ -57,12 +102,16 @@ export default function LoginPage() {
              </label>
 
                      <div className="relative">
-                         <input
-                         type={showPassword ? "text" : "password"}
-                         id="inputField"
-                         className="block w-full rounded-md border border-gray-300 px-3 py-2 pr-16 focus:border-blue-500 focus:ring-blue-500"
-                         placeholder="Enter your password"
-                         />
+                        <input
+                          type={showPassword ? 'text' : 'password'}
+                          id="password"
+                          className="block w-full rounded-md border border-gray-300 px-3 py-2 pr-16 focus:border-blue-500 focus:ring-blue-500"
+                          placeholder="Masukkan password"
+                          value={password}
+                          onChange={(e) => setPassword(e.target.value)}
+                          required
+                        />
+
 
                          <button
                          type="button"
@@ -87,13 +136,16 @@ export default function LoginPage() {
          </div>
                  <div className="flex justify-center">
                  <motion.button
-                 className="p-4 h-[6vh] w-[40vw] rounded-lg mt-[2vh] text-white font-bold text-2xl"
-                 initial={{ opacity: 1, scale: 0.95, backgroundColor: "#608FC2"}}
-                 whileHover={{ opacity: 0.9, scale: 1,  backgroundColor: "#608FC2" }}
-                 transition={{ duration: 0.2,  ease: 'easeOut' }}
-                 >
-                         Login
-                 </motion.button>
+                  type="button"
+                  onClick={handleSubmit}
+                  disabled={loading}
+                  className="p-4 h-[6vh] w-[40vw] rounded-lg mt-[2vh] text-white font-bold text-2xl disabled:opacity-70"
+                  initial={{ opacity: 1, scale: 0.95, backgroundColor: '#608FC2' }}
+                  whileHover={{ opacity: 0.9, scale: 1, backgroundColor: '#608FC2' }}
+                  transition={{ duration: 0.2, ease: 'easeOut' }}
+                >
+                  {loading ? 'Logging in...' : 'Login'}
+                </motion.button>
                  </div>
          
         
