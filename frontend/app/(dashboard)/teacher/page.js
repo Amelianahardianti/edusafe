@@ -1,8 +1,10 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import { useAuthGuard } from '@/hooks/useAuthGuard';
 
 export default function TeacherDashboard() {
+  const { user, loading } = useAuthGuard('teacher');
   return (
     <div className="min-h-screen bg-gray-50">
 

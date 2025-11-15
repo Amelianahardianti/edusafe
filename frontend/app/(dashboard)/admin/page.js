@@ -1,8 +1,17 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import { useAuthGuard } from '@/hooks/useAuthGuard';
 
 export default function AdminDashboard() {
+  const { user, loading } = useAuthGuard('admin');
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        Loading...
+      </div>
+    );
+  }
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
