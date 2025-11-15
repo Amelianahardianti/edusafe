@@ -139,7 +139,7 @@ export default function LoginPage() {
                   type="button"
                   onClick={handleSubmit}
                   disabled={loading}
-                  className="p-4 h-[6vh] w-[40vw] rounded-lg mt-[2vh] text-white font-bold text-2xl disabled:opacity-70"
+                  className="px-6 py-3 w-[40vw] rounded-lg mt-[2vh] text-white font-bold text-2xl disabled:opacity-70"
                   initial={{ opacity: 1, scale: 0.95, backgroundColor: '#608FC2' }}
                   whileHover={{ opacity: 0.9, scale: 1, backgroundColor: '#608FC2' }}
                   transition={{ duration: 0.2, ease: 'easeOut' }}
