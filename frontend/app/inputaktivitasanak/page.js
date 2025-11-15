@@ -8,35 +8,30 @@ export default function CreateNotification() {
       <Navbar />
 
       <FormContainer
-        title="Buat Notifikasi"
+        title="Input Aktivitas Anak"
         fields={[
-          { id: "judul", 
+          { id: "Aktivitas", 
             label: "Judul", 
             type: "text", 
-            placeholder: "Select" 
-        },
-
+            placeholder: "Select" },
         {
         id: "tanggal",
         label: "Tanggal",
         type: "date"
         },
-
         {
         id: "waktuMulai",
-        label: "Waktu Selesai",
+        label: "Waktu Mulai",
         type: "time"
-        },
-        
+        },  
         {
         id: "waktuselesai",
         label: "Waktu Selesai",
         type: "time"
         },
-
           { 
             id: "body", 
-            label: "Isi Notifikasi", 
+            label: "Additional Notes", 
             type: "textarea",
             placeholder: "Maksimal 1000 karakter"
           }

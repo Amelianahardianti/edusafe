@@ -9,19 +9,19 @@ export default function LandingPage() {
   return (
     <div className="relative  min-h-screen overflow-hidden">
 
-      {/* Background Image */}
-      <div className=" absolute inset-0 -z-10">
-        <Image
-          src="/assets/images/kindergarten.png"
-          alt="Children in a classroom setting"
-          height={1080}
-          width={1920}
-          fit
-          priority
-          className="object-cover object-[center top] "
-        />
-        <div className="absolute inset-0 bg-black/25"></div>
-      </div>
+    {/* Background Image */}
+    <div className="absolute inset-0 -z-10">
+      <Image
+        src="/assets/images/kindergarten.png"
+        alt="Children in a classroom setting"
+        height={1080}
+        width={1920}
+        priority
+        className="object-cover object-[center top]"
+      />
+      <div className="absolute inset-0 bg-black/25"></div>
+    </div>
+
 
 
       {/* = NAVBAR = */}
