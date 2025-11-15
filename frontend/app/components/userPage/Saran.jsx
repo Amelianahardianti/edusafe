@@ -1,8 +1,13 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
+import { apiFetch } from "@/lib/api";
 
 const Saran = ({ open, onClose }) => {
+  const [message, setMessage] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
   useEffect(() => {
     if (!open) return;
 
@@ -22,10 +27,33 @@ const Saran = ({ open, onClose }) => {
 
   if (!open) return null;
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // TODO: handle form submission (call API, show errors, etc.)
-    onClose();
+
+    if (!message.trim()) {
+      setError("Pesan tidak boleh kosong.");
+      return;
+    }
+    setLoading(true);
+    setError("");
+    setSuccess("");
+
+    try {
+      await apiFetch("/api/feedbacks", {
+        method: "POST",
+        body: JSON.stringify({ message }),
+      });
+      setSuccess("Terima kasih, saran berhasil dikirim!");
+      setMessage("");
+      setTimeout(() => {
+        setSuccess("");
+        onClose();
+      }, 800);
+    } catch (err) {
+      setError(err.message || "Gagal mengirim saran. Silakan coba lagi.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -56,6 +84,8 @@ const Saran = ({ open, onClose }) => {
               rows={4}
               className="w-full rounded-md border p-2 resize-none md:h-[30vh] h-[60vh] focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder="Ketik Saran Anda di sini..."
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
             />
           </div>
 
