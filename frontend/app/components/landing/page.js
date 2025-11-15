@@ -157,6 +157,7 @@ export default function LandingPage() {
               dan pengembangan diri.
             </p>
 
+            <Link href="/login" className="no-underline">
             <motion.button
             initial={{ backgroundColor: "#ffffff" }}
               whileHover={{ backgroundColor: "#FFC0CB"}}
@@ -169,6 +170,7 @@ export default function LandingPage() {
               Login
              </motion.div>
             </motion.button>
+            </Link>
           </div>
         </div>
       </section>
