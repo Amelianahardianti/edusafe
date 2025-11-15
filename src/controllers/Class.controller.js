@@ -86,7 +86,6 @@ export const detail = async (req, res, next) => {
 };
 
 // PATCH /classes/:id  (admin)
-// boleh ubah: name, grade, schoolYear (hati2: ganti schoolYear bisa kena unique index)
 export const update = async (req, res, next) => {
   try {
     if (!isObjectId(req.params.id)) return res.status(400).json({ msg: "id invalid" });
@@ -130,27 +129,22 @@ export const addHomeroom = async (req, res, next) => {
     const cls = await Class.findById(req.params.id);
     if (!cls) return res.status(404).json({ msg: "class not found" });
 
-    // pastikan usernya guru
     const t = await User.findById(teacherId).select("role");
     if (!t || t.role !== "teacher") {
       return res.status(400).json({ msg: "teacherId must be a valid teacher user" });
     }
 
-    // tambahkan tanpa duplikasi
     await Class.updateOne(
       { _id: req.params.id },
       { $addToSet: { homeroomTeacherIDs: teacherId } }
     );
 
-    // trigger unique index: cari kelas lain di schoolYear sama
-    // (opsional pre-check biar error message lebih ramah)
     const dup = await Class.findOne({
       _id: { $ne: req.params.id },
       schoolYear: cls.schoolYear,
       homeroomTeacherIDs: { $in: [teacherId] }
     }).select("_id");
     if (dup) {
-      // rollback kecil (cabut lagi)
       await Class.updateOne(
         { _id: req.params.id },
         { $pull: { homeroomTeacherIDs: teacherId } }
