@@ -1,5 +1,5 @@
 // controllers/auth.controller.js
-import bcrypt from "bcryptjs";          // saran: pakai bcryptjs biar gak ribet native build
+import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import User from "../models/User.js";
 
@@ -40,11 +40,11 @@ export const login = async (req, res) => {
   const ok = await bcrypt.compare(password, u.password);
   if (!ok) return res.status(401).json({ msg: "invalid credentials" });
 
-  // 3) SIGN TOKEN —> WAJIB sertakan role (dan id)
+  // 3) sign token
   const payload = { sub: u._id.toString(), role: u.role, email: u.email };
   const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: "1h" });
 
-  // optional: set cookie httpOnly (kalau kamu suka header)
+  // set cookie httpOnly 
   // res.cookie("token", token, { httpOnly: true, sameSite: "lax", maxAge: 3600_000 });
 
   // 4) balikin token
