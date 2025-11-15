@@ -71,6 +71,11 @@ const Navbar = () => {
             Kritik & Saran
           </span>
         </li>
+         <li className="cursor-pointer font-code bg-[#0B3869] hover:bg-[#FF3B8F] hover:text-black text-white flex items-center justify-center h-full w-[9vw]">
+          <Link href={`${baseRoute}/logout`} className="block w-full h-full text-center leading-[5vw]">
+            Logout
+          </Link>
+        </li>
       </ul>
     </div>
     <Saran open={isSaranOpen} onClose={() => setIsSaranOpen(false)} />
