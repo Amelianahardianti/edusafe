@@ -13,6 +13,7 @@ module.exports={
       fontFamily:
       {
         jakartasans: ["var(--font-jakartasan)","sans-serif"]
+        
 
       },
       
