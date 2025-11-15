@@ -6,13 +6,12 @@ import { authMiddleware, roleRequired } from "../middlewares/authMiddleware.js";
 const r = Router();
 
 r.get("/ping", ping);
-r.post("/register", authMiddleware,roleRequired("admin"), register); //gw hapus karena gak perlu registrasi user baru selain admin
+r.post("/register", authMiddleware,roleRequired("admin"), register); 
 r.post("/login", login);
 r.patch("/change-password", authMiddleware, changePassword);
 
-//buat test ambil data user dari token
 r.get("/me", authMiddleware, (req, res) => {
-  res.json({ userFromToken: req.user }); // harus ada { id, role, email }
+  res.json({ userFromToken: req.user });
 });
 
 export default r;
