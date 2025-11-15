@@ -11,7 +11,7 @@ r.get("/",         roleRequired("admin","teacher"), ctrl.list);
 r.get("/my",       roleRequired("parent"),          ctrl.listMy);
 r.get("/:id",      roleRequired("admin","teacher"), ctrl.detail);
 r.patch("/:id",    roleRequired("admin","teacher"), ctrl.update); //teacher bisa update data anak
-r.patch("/:id/transfer", roleRequired("admin","teacher"), ctrl.transfer);
+r.patch("/:id/transfer", roleRequired("admin"), ctrl.transfer);
 r.delete("/:id",   roleRequired("admin"),           ctrl.remove);
 
 export default r;
