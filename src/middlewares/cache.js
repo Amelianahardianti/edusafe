@@ -1,14 +1,11 @@
 import redis from "../lib/redis.js";
 
-/** Hitung key cache yang aman per role/user & URL */
 function makeKey(req) {
   const role = req.user?.role || "anon";
   const uid  = req.user?._id || req.user?.sub || "nouser";
-  // untuk endpoint publik (mis. weather) uid tidak masalah; untuk private, ini mencegah kebocoran antar user
   return `${role}:${uid}:${req.originalUrl}`;
 }
 
-/** GET dari cache lebih dulu */
 export function cacheGet(req, res, next) {
   const key = makeKey(req);
   redis.get(key).then((hit) => {
@@ -22,7 +19,6 @@ export function cacheGet(req, res, next) {
   }).catch(next);
 }
 
-/** SET ke cache setelah handler sukses */
 export function cacheSet(req, res, next) {
   const orig = res.json.bind(res);
   res.json = (body) => {
@@ -36,7 +32,6 @@ export function cacheSet(req, res, next) {
   next();
 }
 
-/** Helper untuk set TTL per-route: gunakan di depan handler */
 export function cacheFor(seconds) {
   return function (req, res, next) {
     res.__cacheTTL = seconds;
@@ -44,9 +39,8 @@ export function cacheFor(seconds) {
   };
 }
 
-/** INVALIDASI by prefix: scan & del (hindari KEYS di produksi) */
 export async function cacheDelPrefix(prefix) {
-  const pattern = `*:${prefix}*`; // kita simpan originalUrl di key, jadi prefix = path (mis. /api/broadcasts)
+  const pattern = `*:${prefix}*`;
   let cursor = "0", keys = [];
   do {
     const [cur, batch] = await redis.scan(cursor, "MATCH", pattern, "COUNT", "200");
