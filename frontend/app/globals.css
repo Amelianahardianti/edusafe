@@ -64,6 +64,21 @@ html {
   background: #555;
 }
 
+.loader {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  border: 6px solid rgba(0, 0, 0, 0.15);
+  border-top-color: #0B3869;   /* warna biru Edusafe */
+  animation: spinLoader 0.7s linear infinite;
+}
+
+@keyframes spinLoader {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 /* Custom font classes */
 /* .font-nunito {
   font-family: var(--font-nunito), sans-serif;

@@ -52,6 +52,18 @@ export const detail = async (req, res, next) => {
 //membuat catatan aktivitas anak
 export const create = async (req, res, next) => {
   try {
+    const allowedActivities = [
+      "Senam Pagi",
+      "Kegiatan Bermain",
+      "Kegiatan Bercerita",
+      "Makan Siang",
+      "Jam Pulang"
+    ];
+
+    if (!allowedActivities.includes(req.body.Activity)) {
+      return res.status(400).json({ message: "Activity tidak valid" });
+    }
+
     const payload = {
       ChildID: req.body.ChildID,
       TeacherID: req.user.sub,                     // dari JWT
@@ -80,7 +92,18 @@ export const update = async (req, res, next) => {
       return res.status(403).json({ message: "Forbidden" });
     }
 
-    // Batasi field yang boleh diupdate (opsional tapi disarankan)
+        const allowedActivities = [
+      "Senam Pagi",
+      "Kegiatan Bermain",
+      "Kegiatan Bercerita",
+      "Makan Siang",
+      "Jam Pulang"
+    ];
+
+    if ("Activity" in req.body && !allowedActivities.includes(req.body.Activity)) {
+      return res.status(400).json({ message: "Activity tidak valid" });
+    }
+
     const updatable = ["Activity", "Date", "TimeStart", "TimeEnd", "AdditionalNotes"];
     for (const k of updatable) {
       if (k in req.body) item[k] = k === "Date" ? new Date(req.body[k]) : req.body[k];
