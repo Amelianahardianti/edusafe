@@ -1,11 +1,11 @@
 "use client";
 import { motion } from "framer-motion";
 
-const NotificationPage = (text ) => {
+const NotificationSaranPage = ({headline ="", text="" }) => {
     return (
         <div className="w-[80vw] h-auto border p-[2vh] overflow-hidden rounded-lg">
-            <h1 className="font-bold text-2xl py-[2vh] ">User/Headline</h1>
-            <p className="text-justify whitespace-pre ">
+            <h1 className="font-bold text-2xl py-[2vh] ">{headline}</h1>
+            <p className="whitespace-pre-line w-auto">
 
 {`${text}`}
 </p>
@@ -20,4 +20,4 @@ const NotificationPage = (text ) => {
     );
 }
 
-export default NotificationPage;
+export default NotificationSaranPage;
