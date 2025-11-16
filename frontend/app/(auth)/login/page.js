@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { motion }  from 'framer-motion';
@@ -14,6 +14,29 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const router = useRouter();
+
+    useEffect(() => {
+      if (typeof window === 'undefined') return;
+      const token = localStorage.getItem('token');
+      const role = localStorage.getItem('userRole');
+      if(!token|| !role) return;
+      (async () => {
+        try {
+          await apiFetch('/api/auth/me');
+          if(role ==='admin') {
+            router.replace('/admin');}
+            else if (role === 'teacher'){
+               router.replace('/teacher');}
+            else if (role === 'parent') {
+              router.replace('/parent');}
+            else {
+              router.replace('/');}
+        } catch (err) {
+          localStorage.removeItem('token');
+          localStorage.removeItem('userRole');
+        }
+      })();
+    }, [router]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
