@@ -1,3 +1,5 @@
+"use client";
+import { motion } from "framer-motion";
 import NotificationSaranPage from "@/app/components/userPage/NotificationSaranPage";
 
 const notifications = [
@@ -31,11 +33,21 @@ const notifications = [
 export default function Notifikasi() {
   return (
     <div className="flex flex-col items-center gap-y-[2vh] py-[5vh]">
+      <div className="flex justify-between w-[90vw]"> <h1 className="font-bold text-3xl">Notifikasi</h1> <motion.button 
+                      initial = {{ backgroundColor: "#0D58AB"}}
+                      whileHover={{ scale: 1.1 , backgroundColor: "#0B3869"}}
+                      whileTap={{ scale: 0.9, backgroundColor: "#608FC2" }}
+                      className=" rounded-lg py-[1vh] px-[3vh] w-fit hover:underline text-white"
+                    >
+                      Buat Notifikasi
+                    </motion.button></div>
+      
       {notifications.map((notification) => (
         <NotificationSaranPage
           key={notification.id}
           headline={notification.headline}
           text={notification.body}
+          button="Hapus"
         />
       ))}
     </div>

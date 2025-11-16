@@ -36,6 +36,7 @@ export default function Notifikasi() {
           key={notification.id}
           headline=""
           text={notification.body}
+          button="Hapus"
         />
       ))}
     </div>

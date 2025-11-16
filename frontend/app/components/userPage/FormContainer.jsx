@@ -16,7 +16,7 @@ export default function FormContainer({ title, fields, onSubmit }) {
 
             <div className="flex flex-col gap-[3vh] ">
               {fields.map((field) => (
-                <div key={field.id} className="flex flex-col gap-[1vh]]">
+                <div key={field.id} className="flex flex-col gap-[1vh]">
                   <label  
                     htmlFor={field.id}
                     className="text-xs text-gray-400 px-[1vh]"
@@ -31,6 +31,17 @@ export default function FormContainer({ title, fields, onSubmit }) {
                         type="text"
                         placeholder={field.placeholder}
                         className="w-full bg-transparent  text-black placeholder:text-gray-400 focus:outline-none"
+                      />
+                    </div>
+                  )}
+
+                  {field.type === "password" && (
+                    <div className="bg-gray-100 rounded-lg px-4 py-3">
+                      <input
+                        id={field.id}
+                        type="password"
+                        placeholder={field.placeholder}
+                        className="w-full bg-transparent text-black placeholder:text-gray-400 focus:outline-none"
                       />
                     </div>
                   )}
