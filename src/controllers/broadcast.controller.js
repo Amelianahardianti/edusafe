@@ -10,7 +10,12 @@ export const create = async (req, res, next) => {
     res.status(201).json(row);
   } catch (e) { next(e); }
 };
-
+export const listAll = async (req, res, next) => {
+  try {
+    const rows = await Broadcast.find().sort({ createdAt: -1 });
+    res.json(rows);
+  } catch (e) { next(e); }
+};
 export const listActive = async (req, res, next) => {
   try {
     const now = new Date();
