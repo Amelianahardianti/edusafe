@@ -1,35 +1,36 @@
 "use client";
+import { motion } from "framer-motion";
 
 export default function FormContainer({ title, fields, onSubmit }) {
   return (
-    <section className="bg-gray-50 font-sans p-4 sm:p-8 flex justify-center items-center min-h-screen w-full">
-      <div className="w-full max-w-5xl bg-white border-[3px] border-black/10 rounded-[32px] py-[37px] px-4 sm:px-[43px]">
-        <div className="flex flex-col gap-10">
+    <section className="p-[2vh] md:px-[2vh] flex justify-center items-center min-h-screen w-full">
+      <div className="w-full max-w-5xl bg-white border-[3px] border-[#608FC2] rounded-lg  p-[4vh] md:px-[4vh]">
+        <div className="flex flex-col gap-[5vh]">
           
           {/* Title */}
-          <h1 className="text-2xl font-bold text-[#2B2F32]">
+          <h1 className="text-2xl font-bold text-[#0B3869] p-[2vh]">
             {title}
           </h1>
 
-          <form onSubmit={onSubmit} className="flex flex-col gap-11">
+          <form onSubmit={onSubmit} className="flex flex-col gap-[5vh]">
 
-            <div className="flex flex-col gap-6">
+            <div className="flex flex-col gap-[3vh] ">
               {fields.map((field) => (
-                <div key={field.id} className="flex flex-col gap-2">
-                  <label
+                <div key={field.id} className="flex flex-col gap-[1vh]]">
+                  <label  
                     htmlFor={field.id}
-                    className="text-xs text-[#5E6366] font-normal px-1"
+                    className="text-xs text-gray-400 px-[1vh]"
                   >
                     {field.label}
                   </label>
 
                   {field.type === "text" && (
-                    <div className="bg-[#EFF1F9]/60 rounded-lg px-4 py-3">
+                    <div className="bg-gray-100 rounded-lg px-4 py-3">
                       <input
                         id={field.id}
                         type="text"
                         placeholder={field.placeholder}
-                        className="w-full bg-transparent text-base text-gray-800 placeholder:text-[#ABAFB1] focus:outline-none"
+                        className="w-full bg-transparent  text-black placeholder:text-gray-400 focus:outline-none"
                       />
                     </div>
                   )}
@@ -38,7 +39,7 @@ export default function FormContainer({ title, fields, onSubmit }) {
                     <div className="relative">
                       <select
                         id={field.id}
-                        className="w-full appearance-none bg-[#EFF1F9]/60 rounded-lg px-4 py-3 text-base text-[#ABAFB1] focus:outline-none cursor-pointer"
+                        className="w-full appearance-none bg-gray-100 rounded-lg px-4 py-3  text-gray-400  cursor-pointer"
                       >
                         {field.options.map((opt) => (
                           <option key={opt.value} value={opt.value}>
@@ -57,18 +58,18 @@ export default function FormContainer({ title, fields, onSubmit }) {
                   )}
 
                   {field.type === "textarea" && (
-                    <div className="bg-[#EFF1F9]/60 rounded-lg px-4 py-3">
+                    <div className="bg-gray-100 rounded-lg px-4 py-3 ">
                       <textarea
                         id={field.id}
                         placeholder={field.placeholder}
                         rows={field.rows || 2}
-                        className="w-full bg-transparent text-base text-gray-800 placeholder:text-[#ABAFB1] focus:outline-none resize-y"
+                        className="w-full bg-transparent  text-black placeholder:text-gray-400  resize-y focus:outline-none" 
                       />
                     </div>
                   )}
 
                   {field.type === "number" && (
-                  <div className="bg-[#EFF1F9]/60 rounded-lg px-4 py-3">
+                  <div className="bg-gray-100 rounded-lg px-4 py-3">
                     <input
                       type="number"
                       id={field.id}
@@ -76,7 +77,7 @@ export default function FormContainer({ title, fields, onSubmit }) {
                       min={field.min}
                       max={field.max}
                       step={field.step}
-                      className="w-full bg-transparent text-base text-gray-800 placeholder:text-[#ABAFB1] focus:outline-none"
+                      className="w-full bg-transparent  text-black placeholder:text-gray-400 focus:outline-none"
                     />
                   </div>
                 )}
@@ -85,7 +86,7 @@ export default function FormContainer({ title, fields, onSubmit }) {
                     <input
                         type="date"
                         id={field.id}
-                        className="w-full bg-[#EFF1F9]/60 rounded-lg px-4 py-3 text-base text-gray-800 focus:outline-none"
+                        className="w-full bg-gray-100 rounded-lg px-4 py-3  text-black focus:outline-none"
                     />
                     )}
 
@@ -93,7 +94,8 @@ export default function FormContainer({ title, fields, onSubmit }) {
                     <input
                         type="time"
                         id={field.id}
-                        className="w-full bg-[#EFF1F9]/60 rounded-lg px-4 py-3 text-base text-gray-800 focus:outline-none"
+                        className="w-full bg-gray-100 rounded-lg px-4 py-3  text-black focus:outline-none"
+                        placeholder="Select time"
                     />
                     )}
 
@@ -101,13 +103,15 @@ export default function FormContainer({ title, fields, onSubmit }) {
               ))}
             </div>
 
-            <button
+            <motion.button
               type="submit"
-              className="w-full sm:w-[375px] self-start bg-[#608FC2] text-white font-bold text-base rounded-xl py-[17px] flex items-center justify-center gap-2.5 hover:bg-opacity-90 transition-colors"
+              className="w-full sm:w-[50vh] bg-[#608FC2] text-white font-bold  rounded-xl py-[2vh] flex items-center justify-center gap-2 "
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
             >
               <span>Konfirmasi</span>
               <img src="/assets/svg/Check.svg" className="w-[17px] h-[17px]" />
-            </button>
+            </motion.button>
 
           </form>
         </div>
