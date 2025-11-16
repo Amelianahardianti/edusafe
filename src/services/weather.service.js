@@ -25,14 +25,41 @@ export async function getMiddayForecast(lat, lon) {
     weather: h.condition?.text || ""
   }));
 
-  // Filter 11:00–13:00
-  const windowHours = hours.filter(h => h.timeLocal >= "11:00" && h.timeLocal < "13:00");
+
+  const desired = ["07:00", "08:00", "09:00", "10:00", "11:00", "12:00"];
+  const windowHours = hours.filter(h => desired.includes(h.timeLocal));
+
 
   const rainLikely = windowHours.some(h => h.pop >= 0.4 || /rain|hujan/i.test(h.weather));
 
   return {
-    date: data?.forecast?.forecastday?.[0]?.date, // "YYYY-MM-DD"
+    date: data?.forecast?.forecastday?.[0]?.date, 
     hours: windowHours,
     rainLikely
   };
 }
+
+export async function getWeeklyForecast(lat, lon) {
+  const key = process.env.WEATHERAPI_KEY;
+  if (!key) throw new Error("WEATHERAPI_KEY is not set");
+
+  const q = `${lat},${lon}`;
+  const url = `${BASE}?key=${key}&q=${encodeURIComponent(q)}&days=7&aqi=no&alerts=no`;
+
+  const resp = await fetch(url);
+  if (!resp.ok) throw new Error("WeatherAPI error: " + resp.status);
+
+  const data = await resp.json();
+
+  const days = (data?.forecast?.forecastday || []).map(d => ({
+    date: d.date,                 
+    day: d.day?.condition?.text,  
+    icon: d.day?.condition?.icon, 
+    maxTemp: d.day?.maxtemp_c,
+    minTemp: d.day?.mintemp_c,
+    rainChance: d.day?.daily_chance_of_rain,
+  }));
+
+  return { days };
+}
+

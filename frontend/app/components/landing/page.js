@@ -40,7 +40,7 @@ export default function LandingPage() {
 
         {/* NAV LINKS */}
         <div className="flex items-center gap-[40px] font-nunito text-white font-bold text-[21px]">
-          <Link href="#about" className="hover:text-[#50B0E5] transition">About Us</Link>
+          <Link href="#cta" className="hover:text-[#50B0E5] transition">About Us</Link>
           <Link href="#articles" className="hover:text-[#50B0E5] transition">Articles</Link>
         </div>
       </nav>
@@ -137,7 +137,7 @@ export default function LandingPage() {
       </section>
 
       {/* = CTA SECTION = */}
-      <section className="bg-white py-28 font-jakartasans">
+      <section id="cta" className="bg-white py-28 font-jakartasans">
         <div className="max-w-7xl mx-auto px-[41px] grid lg:grid-cols-2 gap-16 items-center">
 
           <Image
