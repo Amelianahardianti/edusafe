@@ -70,8 +70,9 @@ const bookingData = [
 
 const Tabel = () => {
     return (
-         
-          <table className="w-[90vw]">
+         <div className="flex flex-col justify-center p-[5vh]   ">
+          <h1 className=" font-bold text-2xl ">Data Kehadiran</h1>
+          <table className="w-[90vw] rounded-lg overflow-hidden">
             <thead>
               <tr className="bg-[#0B3869] text-white">
                 <th className="px-4 py-3 text-left font-semibold">Name</th>
@@ -98,7 +99,7 @@ const Tabel = () => {
               ))}
             </tbody>
           </table>
-       
+          </div>
     
     );
 }
