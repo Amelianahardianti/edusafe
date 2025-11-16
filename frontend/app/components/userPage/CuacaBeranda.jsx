@@ -54,7 +54,7 @@ const CuacaBeranda = ( {weather} ) => {
     };
    
     return(
-        <div className="rounded-lg bg-[#FFED24] flex flex-col w-[30%] h-auto ">
+        <div className="rounded-lg bg-[#FFED24] flex flex-col h-auto ">
             <div className="lg:flex justify-between px-[2vh] items-center">
                 <div>
                     <div className="font-bold text-2xl"> Cuaca Hari Ini</div>

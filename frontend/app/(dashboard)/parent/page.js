@@ -1,15 +1,17 @@
 'use client';
 
+import ActivityBeranda from '@/app/components/userPage/ActivityBeranda';
+import NotifBeranda from '@/app/components/userPage/NotifBeranda';
 import { motion } from 'framer-motion';
-import { useAuthGuard } from '@/hooks/useAuthGuard';
+import TabelBeranda from '@/app/components/userPage/TabelBeranda';
+import CuacaBeranda from '@/app/components/userPage/CuacaBeranda';
 
 export default function ParentDashboard() {
-  const { user, loading } = useAuthGuard('parent');
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="pt-[4vh] min-h-screen bg-gray-50">
 
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main className="max-w-10xl mx-[7vh] px-4 sm:px-6 lg:px-8 py-8">
         <motion.h2
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -18,21 +20,25 @@ export default function ParentDashboard() {
           Dashboard Orang Tua
         </motion.h2>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="bg-white rounded-lg shadow-md p-6">
-            <h3 className="text-lg font-semibold mb-2">Data Anak</h3>
-            <p className="text-gray-600 text-sm mb-4">Lihat data anak Anda</p>
-            <a href="/parent/children" className="text-blue-600 hover:text-blue-800 text-sm font-medium">
-              Lihat →
-            </a>
+        <div className="grid grid-flow-row xl:grid-cols-3 gap-6">
+          <div>
+            <NotifBeranda></NotifBeranda>
+          </div>
+          <div>
+            <ActivityBeranda 
+            name="MULAT ADI"
+            type="Kelas"
+            text="Melakukan Kelas Matematika"
+            date="Rabu, 26 Oktober 2025"
+            time_from="07.00"
+            time_to="08.30"
+            sender="Ir. Lorem Ipsum S.Pd.Fil"
+            style="xl:w-[27vw] xl:h-[10vw] w-[80vw] h-[20vw]"></ActivityBeranda>
           </div>
 
-          <div className="bg-white rounded-lg shadow-md p-6">
-            <h3 className="text-lg font-semibold mb-2">Presensi</h3>
-            <p className="text-gray-600 text-sm mb-4">Lihat riwayat presensi anak</p>
-            <a href="/parent/attendance" className="text-blue-600 hover:text-blue-800 text-sm font-medium">
-              Lihat →
-            </a>
+          <div className='flex flex-col gap-[5vh]'>
+            <CuacaBeranda></CuacaBeranda>
+            <TabelBeranda></TabelBeranda>
           </div>
         </div>
       </main>

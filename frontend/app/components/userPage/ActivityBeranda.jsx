@@ -60,8 +60,8 @@ const ActivityBeranda = ({ name, type, text, date, time_from, time_to, sender, s
                     Waktu Dilaksanakan
                 </div>
 
-                <div className=" md:text-4xl text-xl text-center">
-                    {time_from}<br /> - <br /> {time_to}
+                <div className=" md:text-xl text-xl text-center">
+                    {time_from} - {time_to}
                 </div>
             </div>
         </div>

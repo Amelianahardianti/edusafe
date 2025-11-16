@@ -33,7 +33,7 @@ const notifications = [
 
 const NotifBeranda = () => {  
     return (
-        <div className="w-[70vw] backdrop-blur-md  drop-shadow-xl h-auto lg:w-[25vw] rounded-lg border ">
+        <div className="backdrop-blur-md  drop-shadow-xl h-auto xl:w-[25vw] rounded-lg border ">
             <div className=" filter-none ">
               <h1 className="font-bold text-2xl text-white bg-[#0D58AB] rounded-t-md p-[2vh]">Berita Terbaru</h1>
               <hr className=" bg-yellow-500"></hr>
