@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 
-const ActivityBeranda = ({ name, type, text, date, time_from, time_to, sender }) => {
+const ActivityBeranda = ({ name, type, text, date, time_from, time_to, sender, style  }) => {
     let fill_muda, fill_avg, fill_tua;
 
     if (type === "Kelas") {
@@ -19,23 +19,23 @@ const ActivityBeranda = ({ name, type, text, date, time_from, time_to, sender })
 
     return (
         <div
-            className="w-[80vw] h-[20vh] bg-orange-600 rounded-lg flex border-2 overflow-hidden"
+            className={`${style} rounded-lg grid grid-flow-col grid-cols-4 border-2 overflow-hidden`}
             style={{ borderColor: `#${fill_tua}` }}
         >
             
            
             <div
-                className="items-center flex justify-center font-bold w-[20vw]"
+                className="items-center flex justify-center font-bold md:text-4xl text-xl "
                 style={{ backgroundColor: `#${fill_avg}` }}
             >
                 {type}
             </div>
 
       
-            <div className="w-[40vw] bg-white flex flex-col justify-between">
+            <div className="col-span-2 col-start-2 w-full bg-white flex flex-col justify-between">
                 
                 <div
-                    className="w-fit rounded-br-lg px-[2vh] py-[1vh] font-bold"
+                    className="w-fit rounded-br-lg px-[3vh] py-[2vh] font-bold"
                     style={{ backgroundColor: `#${fill_muda}` }}
                 >
                     {name} sedang {text}
@@ -50,18 +50,18 @@ const ActivityBeranda = ({ name, type, text, date, time_from, time_to, sender })
 
      
             <div
-                className="w-[20vw] flex flex-col items-center font-bold gap-y-[2vh]"
+                className="flex flex-col items-center font-bold gap-y-[2vh]  "
                 style={{ backgroundColor: `#${fill_muda}` }}
             >
                 <div
-                    className="w-full flex justify-center rounded-b-lg text-xl h-[8vh] py-[2vh] items-center"
+                    className="flex justify-center rounded-b-lg text-lg py-[2vh]  w-full  text-center"
                     style={{ backgroundColor: `#${fill_avg}` }}
                 >
                     Waktu Dilaksanakan
                 </div>
 
-                <div className=" text-4xl ">
-                    {time_from} - {time_to}
+                <div className=" md:text-4xl text-xl text-center">
+                    {time_from}<br /> - <br /> {time_to}
                 </div>
             </div>
         </div>
