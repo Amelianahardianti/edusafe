@@ -1,90 +1,63 @@
 "use client";
 import { motion, AnimatePresence } from "framer-motion";
-import { useState } from "react";
-
-const studentData = [
-  {
-    id: 1,
-    name: 'John Doe',
-    birthDate: '2018-03-15',
-    parent: 'Sarah Doe',
-    lastActivity: 'Bermain Puzzle',
-    attendance: '95%',
-    status: 'Active'
-  },
-  {
-    id: 2,
-    name: 'Jane Smith',
-    birthDate: '2017-08-22',
-    parent: 'Michael Smith',
-    lastActivity: 'Menggambar',
-    attendance: '88%',
-    status: 'Active'
-  },
-  {
-    id: 3,
-    name: 'Bob Johnson',
-    birthDate: '2018-01-10',
-    parent: 'Emma Johnson',
-    lastActivity: 'Bernyanyi',
-    attendance: '92%',
-    status: 'Active'
-  },
-  {
-    id: 4,
-    name: 'Alice Brown',
-    birthDate: '2017-11-05',
-    parent: 'David Brown',
-    lastActivity: 'Membaca Buku',
-    attendance: '78%',
-    status: 'Inactive'
-  },
-  {
-    id: 5,
-    name: 'Charlie Wilson',
-    birthDate: '2018-06-18',
-    parent: 'Linda Wilson',
-    lastActivity: 'Olahraga',
-    attendance: '97%',
-    status: 'Active'
-  },
-  {
-    id: 6,
-    name: 'Diana Martinez',
-    birthDate: '2017-09-30',
-    parent: 'Carlos Martinez',
-    lastActivity: 'Menari',
-    attendance: '85%',
-    status: 'Active'
-  },
-  {
-    id: 7,
-    name: 'Ethan Davis',
-    birthDate: '2018-04-12',
-    parent: 'Jessica Davis',
-    lastActivity: 'Bermain Lego',
-    attendance: '90%',
-    status: 'Active'
-  },
-  {
-    id: 8,
-    name: 'Fiona Garcia',
-    birthDate: '2017-12-25',
-    parent: 'Roberto Garcia',
-    lastActivity: 'Melukis',
-    attendance: '93%',
-    status: 'Active'
-  }
-];
+import { useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
+import { apiFetch } from "@/lib/api";
 
 export default function InformasiKelas() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedStudent, setSelectedStudent] = useState(null);
 
-  const filteredStudents = studentData.filter(student =>
+  const [students, setStudents] = useState([]);
+  const [classInfo, setClassInfo] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  const searchParams = useSearchParams();
+  const classId = searchParams.get("classId");
+  useEffect(() => {
+    async function load() {
+      if (!classId) {
+        setError("classId tidak ditemukan di URL");
+        setLoading(false);
+        return;
+      }
+
+      try {
+        setLoading(true);
+        setError("");
+
+        const classReq = apiFetch(`/api/classes/${classId}`).catch(() => null);
+        const childrenReq = apiFetch(`/api/children?classId=${classId}`);
+        const [classRes, childRes] = await Promise.all([classReq, childrenReq]);
+
+        if (classRes) setClassInfo(classRes);
+        const mapped = (childRes.data || []).map((ch) => ({
+          id: ch._id,
+          name: ch.name,
+          birthDate: ch.birthDate ? ch.birthDate.slice(0, 10) : "-",
+          parent: ch.parentID?.name || "-",
+          lastActivity: "Belum ada data",
+          attendance: "0%",           
+          status: "Active",
+        }));
+
+        setStudents(mapped);
+      } catch (err) {
+        console.error(err);
+        setError(err.message || "Gagal memuat data siswa");
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    load();
+  }, [classId]);
+  const filteredStudents = students.filter(student =>
     student.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
     student.parent.toLowerCase().includes(searchQuery.toLowerCase())
   );
+
 
   return (
     <div className="min-h-screen bg-[#F5F7FA] py-8 px-6">
@@ -102,12 +75,25 @@ export default function InformasiKelas() {
           className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8"
         >
           <div>
-            <h1 className="text-3xl md:text-4xl font-bold text-[#0B3869]">
-              Informasi Kelas
-            </h1>
-            <p className="text-gray-600 mt-1">
-              Kelola data siswa dan informasi kelas
-            </p>
+          <h1 className="text-3xl md:text-4xl font-bold text-[#0B3869]">
+            Informasi Kelas{classInfo ? ` ${classInfo.name} (Kelas ${classInfo.grade})` : ""}
+          </h1>
+          <p className="text-gray-600 mt-1">
+            Kelola data siswa dan informasi kelas
+            {classInfo?.schoolYear ? ` - Tahun ajaran ${classInfo.schoolYear}` : ""}
+          </p>
+
+          {error && (
+          <p className="text-red-600 text-sm mt-2">
+            {error}
+          </p>
+          )}
+          {loading && (
+          <p className="text-gray-500 text-sm mt-2">
+            Memuat data siswa...
+          </p>
+         )}
+
           </div>
           <motion.button
             whileHover={{ scale: 1.05 }}
@@ -162,7 +148,7 @@ export default function InformasiKelas() {
               </div>
               <div>
                 <p className="text-sm text-gray-600">Total Siswa</p>
-                <p className="text-2xl font-bold text-[#0B3869]">{studentData.length}</p>
+                <p className="text-2xl font-bold text-[#0B3869]">{students.length}</p>
               </div>
             </div>
           </motion.div>
@@ -179,7 +165,7 @@ export default function InformasiKelas() {
               </div>
               <div>
                 <p className="text-sm text-gray-600">Hadir Hari Ini</p>
-                <p className="text-2xl font-bold text-[#0B3869]">{studentData.filter(s => s.status === 'Active').length}</p>
+                <p className="text-2xl font-bold text-[#0B3869]">{students.filter(s => s.status === 'Active').length}</p>
               </div>
             </div>
           </motion.div>
