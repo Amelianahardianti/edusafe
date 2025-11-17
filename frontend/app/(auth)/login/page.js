@@ -146,12 +146,12 @@ export default function LoginPage() {
               alt="Eye_off_icon"
               width={77}
               height={87}
-              className="w-12 h-14 sm:w-16 sm:h-[72px] lg:w-[24px] lg:h-[24px] cursor-pointer"/> : <Image
+              className="w-fit h-fit cursor-pointer"/> : <Image
               src="/assets/svg/mdi_eye.svg"
               alt="Eye_icon"
               width={77}
               height={87}
-              className="w-12 h-14 sm:w-16 sm:h-[72px] lg:w-[24px] lg:h-[24px] cursor-pointer"
+              className="w-fit h-fit cursor-pointer"
             />}
                          </button>
                      </div>
