@@ -3,7 +3,17 @@ import { motion } from "framer-motion";
 import React from "react";
 import Image from "next/image";
 
-export default function FormContainer({ title, fields, onSubmit }) {
+export default function FormContainer({ title, fields, onSubmit, error, success }) {
+  {error && (
+    <p className="text-red-600 text-sm mb-2">
+      {error}
+    </p>
+  )}
+  {success && (
+    <p className="text-emerald-600 text-sm mb-2">
+      {success}
+    </p>
+  )}
 
   const [showPassword, setShowPassword] = React.useState({});
 
@@ -34,6 +44,7 @@ export default function FormContainer({ title, fields, onSubmit }) {
                     <div className="bg-gray-100 rounded-lg px-4 py-3">
                       <input
                         id={field.id}
+                        name={field.id}
                         type="text"
                         placeholder={field.placeholder}
                         className="w-full bg-transparent  text-black placeholder:text-gray-400 focus:outline-none"
@@ -45,6 +56,7 @@ export default function FormContainer({ title, fields, onSubmit }) {
                     <div className="bg-gray-100 rounded-lg px-4 py-3 relative">
                       <input
                         id={field.id}
+                        name={field.id}
                         type={showPassword[field.id] ? "text" : "password"}
                         placeholder={field.placeholder}
                         className="w-full pr-16 bg-transparent text-black placeholder:text-gray-400 focus:outline-none"
@@ -80,6 +92,7 @@ export default function FormContainer({ title, fields, onSubmit }) {
                     <div className="relative">
                       <select
                         id={field.id}
+                        name={field.id}
                         className="w-full appearance-none bg-gray-100 rounded-lg px-4 py-3  text-gray-400  cursor-pointer"
                       >
                         {field.options.map((opt) => (
@@ -102,6 +115,7 @@ export default function FormContainer({ title, fields, onSubmit }) {
                     <div className="bg-gray-100 rounded-lg px-4 py-3 ">
                       <textarea
                         id={field.id}
+                        name={field.id}
                         placeholder={field.placeholder}
                         rows={field.rows || 2}
                         className="w-full bg-transparent  text-black placeholder:text-gray-400  resize-y focus:outline-none" 
@@ -114,6 +128,7 @@ export default function FormContainer({ title, fields, onSubmit }) {
                     <input
                       type="number"
                       id={field.id}
+                      name={field.id}
                       placeholder={field.placeholder}
                       min={field.min}
                       max={field.max}
@@ -127,6 +142,7 @@ export default function FormContainer({ title, fields, onSubmit }) {
                     <input
                         type="date"
                         id={field.id}
+                        name={field.id}
                         className="w-full bg-gray-100 rounded-lg px-4 py-3  text-black focus:outline-none"
                     />
                     )}
@@ -135,6 +151,7 @@ export default function FormContainer({ title, fields, onSubmit }) {
                     <input
                         type="time"
                         id={field.id}
+                        name={field.id}
                         className="w-full bg-gray-100 rounded-lg px-4 py-3  text-black focus:outline-none"
                         placeholder="Select time"
                     />
