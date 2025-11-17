@@ -4,7 +4,7 @@ import NotificationSaranPage from "@/app/components/userPage/NotificationSaranPa
 import { useEffect, useState } from "react";
 import { apiFetch } from "@/lib/api";
 import { useAuthGuard } from "@/hooks/useAuthGuard";
-
+import Link from "next/link";
 
 const LogoMark = ({
   className = "h-12 w-12",
@@ -98,7 +98,8 @@ export default function Notifikasi() {
 
     async function load(){
       try {
-        const data = await apiFetch("/api/broadcasts/all");
+        const data = await apiFetch("/api/broadcasts");
+        //const data = await apiFetch("/api/broadcasts/all");
         console.log("Fetched notifications:", data);
         if (!cancelled) {
           const arr = Array.isArray(data) ? data : 
@@ -179,13 +180,18 @@ export default function Notifikasi() {
   const IconComponent = activeToastConfig?.icon || LogoMark;
   return (
     <div className="flex flex-col items-center gap-y-[2vh] py-[5vh]">
-      <div className="flex justify-between w-[90vw]"> <h1 className="font-bold text-3xl">Notifikasi</h1> <motion.button 
+      <div className="flex justify-between w-[90vw]"> <h1 className="font-bold text-3xl">
+        Notifikasi</h1>
+
+      <motion.button 
                       initial = {{ backgroundColor: "#0D58AB"}}
                       whileHover={{ scale: 1.1 , backgroundColor: "#0B3869"}}
                       whileTap={{ scale: 0.9, backgroundColor: "#608FC2" }}
                       className=" rounded-lg py-[1vh] px-[3vh] w-fit hover:underline text-white"
                     >
-                      Buat Notifikasi
+                      <Link href="/buatnotif">
+                    Buat Notifikasi
+                    </Link>
                     </motion.button></div>
       
       {notifications.map((notification) => (
