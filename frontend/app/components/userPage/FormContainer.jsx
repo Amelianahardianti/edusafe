@@ -1,8 +1,14 @@
 "use client";
 import { motion } from "framer-motion";
+import React from "react";
+import Image from "next/image";
 
 export default function FormContainer({ title, fields, onSubmit }) {
+
+  const [showPassword, setShowPassword] = React.useState({});
+
   return (
+    
     <section className="p-[2vh] md:px-[2vh] flex justify-center items-center min-h-screen w-full">
       <div className="w-full max-w-5xl bg-white border-[3px] border-[#608FC2] rounded-lg  p-[4vh] md:px-[4vh]">
         <div className="flex flex-col gap-[5vh]">
@@ -16,7 +22,7 @@ export default function FormContainer({ title, fields, onSubmit }) {
 
             <div className="flex flex-col gap-[3vh] ">
               {fields.map((field) => (
-                <div key={field.id} className="flex flex-col gap-[1vh]">
+                <div key={field.id} className="flex flex-col gap-[1vh]]">
                   <label  
                     htmlFor={field.id}
                     className="text-xs text-gray-400 px-[1vh]"
@@ -36,13 +42,37 @@ export default function FormContainer({ title, fields, onSubmit }) {
                   )}
 
                   {field.type === "password" && (
-                    <div className="bg-gray-100 rounded-lg px-4 py-3">
+                    <div className="bg-gray-100 rounded-lg px-4 py-3 relative">
                       <input
                         id={field.id}
-                        type="password"
+                        type={showPassword[field.id] ? "text" : "password"}
                         placeholder={field.placeholder}
-                        className="w-full bg-transparent text-black placeholder:text-gray-400 focus:outline-none"
+                        className="w-full pr-16 bg-transparent text-black placeholder:text-gray-400 focus:outline-none"
                       />
+
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setShowPassword((prev) => ({
+                            ...prev,
+                            [field.id]: !prev[field.id],
+                          }))
+                        }
+                        className="absolute inset-y-0 right-4 flex items-center text-xs text-gray-500"
+                      >
+                        {showPassword[field.id] ? <Image
+                        src="/assets/svg/eye-off.svg"
+                        alt="Eye_off_icon"
+                        width={77}
+                        height={87}
+                        className="w-fit h-fit cursor-pointer"/> : <Image
+                        src="/assets/svg/mdi_eye.svg"
+                        alt="Eye_icon"
+                        width={77}
+                        height={87}
+                        className="w-fit h-fit cursor-pointer"
+                      />}
+                      </button>
                     </div>
                   )}
 
