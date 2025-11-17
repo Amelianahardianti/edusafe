@@ -34,11 +34,23 @@ export function roleRequired(...allowed) {
 
 export const requireAdmin = (req, res, next) => {
   try {
-    const token = req.headers.authorization?.split(" ")[1];
-    if (!token) return res.status(401).json({ msg: "unauthenticated" });
+    let token = null;
+
+    // 1. ambil dari header
+    if (req.headers.authorization?.startsWith("Bearer ")) {
+      token = req.headers.authorization.split(" ")[1];
+    }
+
+    // 2. fallback: ambil dari cookie
+    if (!token && req.cookies?.token) {
+      token = req.cookies.token;
+    }
+
+    if (!token) {
+      return res.status(401).json({ msg: "unauthenticated" });
+    }
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    console.log("decoded =", decoded);
 
     if (decoded.role !== "admin") {
       return res.status(403).json({ msg: "forbidden admin only" });
@@ -50,4 +62,5 @@ export const requireAdmin = (req, res, next) => {
     return res.status(401).json({ msg: "invalid token" });
   }
 };
+
 

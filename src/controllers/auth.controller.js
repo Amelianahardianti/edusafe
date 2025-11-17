@@ -45,7 +45,13 @@ export const login = async (req, res) => {
   const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: "1h" });
 
   // set cookie httpOnly 
-  // res.cookie("token", token, { httpOnly: true, sameSite: "lax", maxAge: 3600_000 });
+  res.cookie("token", token, {
+    httpOnly: true,
+    secure: false,      // localhost = false
+    sameSite: "lax",
+    maxAge: 24 * 60 * 60 * 1000
+  });
+
 
   // 4) balikin token
   res.json({

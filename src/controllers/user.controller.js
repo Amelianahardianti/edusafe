@@ -1,5 +1,6 @@
 import bcrypt from 'bcryptjs';
 import user from '../models/User.js';
+import Child from "../models/Child.js";
 
 export const getUsers = async (req, res) =>{
   const q = {};
@@ -73,5 +74,36 @@ export const remove = async (req, res) =>{
     const del = await user.findByIdAndDelete(req.params.id);
     if(!del) return res.status(404).json({msg: 'not found'});
     res.json({ok: true});
+};
+
+export const getAccounts = async (req, res) => {
+  try {
+    const users = await user.find().select("-password").lean();
+
+    const combined = await Promise.all(
+      users.map(async (u) => {
+        // hanya parent yang bisa punya anak
+        const children =
+          u.role === "parent"
+            ? await Child.find({ parentID: u._id })
+                .select("name birthDate")
+                .lean()
+            : [];
+
+        return {
+          id: u._id,
+          name: u.name,
+          email: u.email,
+          role: u.role,
+          children,
+        };
+      })
+    );
+
+    res.json(combined);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ msg: "server error" });
+  }
 };
 

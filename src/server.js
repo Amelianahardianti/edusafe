@@ -25,7 +25,10 @@ const api = express();
 
 // middleware
 api.use(express.json());
-api.use(cors({ origin: true, credentials: true }));
+api.use(cors({
+  origin: "http://localhost:3000",
+  credentials: true
+}));
 api.use(cookieParser());
 api.use(morgan("dev"));
 

@@ -42,7 +42,7 @@ const Navbar = () => {
       {/* Navbar */}
       <ul className="flex h-full">
         <li className="cursor-pointer font-code bg-[#0B3869] hover:bg-[#24C1DC] hover:text-black text-white flex items-center justify-center h-full w-[10vw]">
-          <Link href="/" className="block w-full h-full text-center leading-[5vw]">
+          <Link href={baseRoute || "/"}  className="block w-full h-full text-center leading-[5vw]">
             Beranda
           </Link>
         </li>

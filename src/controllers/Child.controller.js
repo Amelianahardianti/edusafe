@@ -1,5 +1,5 @@
 // src/controllers/Child.controller.js
-import Child from "../models/child.js";
+import Child from "../models/Child.js";
 import User from "../models/User.js";
 import Class from "../models/Class.js";
 
