@@ -34,6 +34,7 @@ export default function FormContainer({ title, fields, onSubmit }) {
                     <div className="bg-gray-100 rounded-lg px-4 py-3">
                       <input
                         id={field.id}
+                        name={field.id}   
                         type="text"
                         placeholder={field.placeholder}
                         className="w-full bg-transparent  text-black placeholder:text-gray-400 focus:outline-none"
@@ -45,6 +46,7 @@ export default function FormContainer({ title, fields, onSubmit }) {
                     <div className="bg-gray-100 rounded-lg px-4 py-3 relative">
                       <input
                         id={field.id}
+                        name={field.id}   
                         type={showPassword[field.id] ? "text" : "password"}
                         placeholder={field.placeholder}
                         className="w-full pr-16 bg-transparent text-black placeholder:text-gray-400 focus:outline-none"
@@ -80,6 +82,7 @@ export default function FormContainer({ title, fields, onSubmit }) {
                     <div className="relative">
                       <select
                         id={field.id}
+                        name={field.id}
                         className="w-full appearance-none bg-gray-100 rounded-lg px-4 py-3  text-gray-400  cursor-pointer"
                       >
                         {field.options.map((opt) => (
@@ -113,6 +116,7 @@ export default function FormContainer({ title, fields, onSubmit }) {
                   <div className="bg-gray-100 rounded-lg px-4 py-3">
                     <input
                       type="number"
+                      name={field.id}
                       id={field.id}
                       placeholder={field.placeholder}
                       min={field.min}
@@ -126,6 +130,7 @@ export default function FormContainer({ title, fields, onSubmit }) {
                   {field.type === "date" && (
                     <input
                         type="date"
+                        name={field.id}   
                         id={field.id}
                         className="w-full bg-gray-100 rounded-lg px-4 py-3  text-black focus:outline-none"
                     />
@@ -134,6 +139,7 @@ export default function FormContainer({ title, fields, onSubmit }) {
                   {field.type === "time" && (
                     <input
                         type="time"
+                        name={field.id}   
                         id={field.id}
                         className="w-full bg-gray-100 rounded-lg px-4 py-3  text-black focus:outline-none"
                         placeholder="Select time"

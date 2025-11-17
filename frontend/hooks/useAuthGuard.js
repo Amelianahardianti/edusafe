@@ -14,7 +14,7 @@ export function useAuthGuard(requiredRole) {
 
     async function checkAuth() {
       try {
-        const data = await apiFetch('/api/auth/me');
+        const data = await apiFetch('/auth/me');
 
         const u =
           data.user ||
@@ -23,7 +23,7 @@ export function useAuthGuard(requiredRole) {
           data.data ||
           null;
 
-        if (!u) throw new Error('no user data from /api/auth/me');
+        if (!u) throw new Error('no user data from /auth/me');
 
         if (requiredRole && u.role !== requiredRole) {
           router.replace('/ErrorPage');

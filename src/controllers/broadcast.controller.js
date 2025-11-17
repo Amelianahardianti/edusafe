@@ -52,3 +52,23 @@ export const remove = async (req, res, next) => {
     res.status(204).end();
   } catch (e) { next(e); }
 };
+
+export const listForTeacher = async (req, res, next) => {
+  try {
+    // NTR SESUAIKAN
+    const rows = await Broadcast.find().sort({ createdAt: -1 });
+    res.json(rows);
+  } catch (e) {
+    next(e);
+  }
+};
+
+export const listForParent = async (req, res, next) => {
+  try {
+    // NTR SESUAIKAN
+    const rows = await Broadcast.find().sort({ createdAt: -1 });
+    res.json(rows);
+  } catch (e) {
+    next(e);
+  }
+};

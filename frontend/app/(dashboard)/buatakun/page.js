@@ -6,6 +6,8 @@ import Image from "next/image";
 
 export default function CreateAccount() {
   const [selectedRole, setSelectedRole] = useState("");
+  const [form, setForm] = useState({});
+
 
   // field dasar (tanpa role & field anak)
   const baseFields = [
@@ -102,7 +104,70 @@ export default function CreateAccount() {
       <FormContainer
         title="Buat Akun"
         fields={fields}
+        onSubmit={(e) => handleSubmit(e)}
       />
     </div>
   );
+
+  async function handleSubmit(e) {
+  e.preventDefault();
+
+  const formData = new FormData(e.target);
+
+  const payload = {
+    role: formData.get("role"),
+    name: formData.get("name"),
+    email: formData.get("email"),
+    password: formData.get("password"),
+  };
+
+  // cek parent → harus kirim child
+  if (payload.role === "parent") {
+    payload.child = {
+      name: formData.get("childName"),
+      birthDate: formData.get("childBirthDate"),
+      classId: formData.get("childClass"),  
+    };
+  }
+
+  console.log("PAYLOAD = ", payload);
+
+  // 1. buat akun dulu
+  const res = await fetch("http://localhost:4000/api/users", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    credentials: "include",
+    body: JSON.stringify(payload),
+  });
+
+  const data = await res.json();
+  console.log("USER CREATED =", data);
+
+  if (!res.ok) {
+    alert("Gagal buat akun: " + data.msg);
+    return;
+  }
+
+  // 2. kalau parent → nambah data anak
+  if (payload.role === "parent") {
+    const childRes = await fetch("http://localhost:4000/api/children", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify({
+        name: payload.child.name,
+        birthDate: payload.child.birthDate,
+        parentID: data.id, // id user baru
+        classId: payload.child.classId,
+      }),
+    });
+
+    const childData = await childRes.json();
+    console.log("CHILD CREATED =", childData);
+  }
+
+  alert("Akun berhasil dibuat!");
+  window.location.href = "/admin/users";
+}
+
 }

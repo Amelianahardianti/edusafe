@@ -22,7 +22,7 @@ export default function LoginPage() {
       if(!token|| !role) return;
       (async () => {
         try {
-          await apiFetch('/api/auth/me');
+          await apiFetch('/auth/me');
           if(role ==='admin') {
             router.replace('/admin');}
             else if (role === 'teacher'){
@@ -43,7 +43,7 @@ export default function LoginPage() {
     setLoading(true);
     setError('');
     try {
-      const data = await apiFetch('/api/auth/login', {
+      const data = await apiFetch('/auth/login', {
         method: 'POST',
         body: JSON.stringify({ email, password }),
         headers: { 'Content-Type': 'application/json' },
@@ -135,24 +135,23 @@ export default function LoginPage() {
                           required
                         />
 
-
                          <button
                          type="button"
                          onClick={() => setShowPassword((prev) => !prev)}
                          className="absolute inset-y-0 right-0 flex items-center pr-3 text-sm text-blue-600 hover:underline"
                          >
                          {showPassword ? <Image
-              src="/assets/svg/eye-off.svg"
-              alt="Eye_off_icon"
-              width={77}
-              height={87}
-              className="w-fit h-fit cursor-pointer"/> : <Image
-              src="/assets/svg/mdi_eye.svg"
-              alt="Eye_icon"
-              width={77}
-              height={87}
-              className="w-fit h-fit cursor-pointer"
-            />}
+                          src="/assets/svg/eye-off.svg"
+                          alt="Eye_off_icon"
+                          width={77}
+                          height={87}
+                          className="w-fit h-fit cursor-pointer"/> : <Image
+                          src="/assets/svg/mdi_eye.svg"
+                          alt="Eye_icon"
+                          width={77}
+                          height={87}
+                          className="w-fit h-fit cursor-pointer"
+                        />}
                          </button>
                      </div>
              </form>

@@ -1,4 +1,6 @@
-const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL;
+const API_BASE = process.env.NEXT_PUBLIC_BACKEND_URL;
+
+
 
 export async function apiFetch(path, options = {}) {
   const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;

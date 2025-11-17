@@ -2,8 +2,10 @@
 
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
+import { useRouter } from "next/navigation";
 
 export default function Tabel() {
+  const router = useRouter();    
   const [accounts, setAccounts] = useState([]);
 
         useEffect(() => {
@@ -13,11 +15,10 @@ export default function Tabel() {
         })
             .then((res) => res.json())
             .then((data) => {
-            console.log("DATA DARI API:", data); // 🔥 CEK ISINYA
+            console.log("DATA DARI API:", data); 
             setAccounts(data);
             });
         }, []);
-
 
 
   return (
@@ -30,6 +31,7 @@ export default function Tabel() {
           whileHover={{ scale: 1.1, backgroundColor: "#0B3869" }}
           whileTap={{ scale: 0.9, backgroundColor: "#608FC2" }}
           className="rounded-lg py-[1vh] px-[3vh] w-fit hover:underline text-white"
+          onClick={() => window.location.href = "/buatakun"} 
         >
           Tambah Akun
         </motion.button>
@@ -44,45 +46,56 @@ export default function Tabel() {
             <th className="px-4 py-3 text-left font-semibold">Role</th>
             <th className="px-4 py-3 text-left font-semibold">Password</th>
             <th className="px-4 py-3 text-left font-semibold">Edit</th>
-          </tr>
+            </tr>
         </thead>
 
-     <tbody>
-  {Array.isArray(accounts) &&
-    accounts.map((acc, index) => (
-      <tr
-        key={acc.id}
-        className={index % 2 === 0 ? "bg-[#DFE8F2]" : "bg-white"}
-      >
-        <td className="px-4 py-3 text-gray-700">{acc.name}</td>
+        <tbody>
+          {Array.isArray(accounts) &&
+            accounts.map((acc, index) => (
+              <tr
+                key={acc.id}
+                className={index % 2 === 0 ? "bg-[#DFE8F2]" : "bg-white"}
+              >
+                <td className="px-4 py-3 text-gray-700">{acc.name}</td>
 
-        {/* Nama Anak */}
-        <td className="px-4 py-3 text-gray-700">
-          {acc.role === "parent"
-            ? acc.children?.map((c) => (
-                <div key={c.name}>{c.name}</div>
-              ))
-            : "–"}
-        </td>
+                <td className="px-4 py-3 text-gray-700">
+                  {acc.role === "parent"
+                    ? acc.children?.map((c) => (
+                        <div key={c.name}>{c.name}</div>
+                      ))
+                    : "–"}
+                </td>
 
-        <td className="px-4 py-3 text-gray-700">{acc.email}</td>
-        <td className="px-4 py-3 text-gray-700">{acc.role}</td>
+                <td className="px-4 py-3 text-gray-700">{acc.email}</td>
+                <td className="px-4 py-3 text-gray-700">{acc.role}</td>
+                <td className="px-4 py-3 text-gray-700">-</td>
 
-        <td className="px-4 py-3 text-gray-700">-</td>
+                <td className="px-4 py-3 text-gray-700">
+                  <motion.button
+                    initial={{ backgroundColor: "#0D58AB" }}
+                    whileHover={{
+                      scale: 1.1,
+                      backgroundColor: "#0B3869",
+                    }}
+                    whileTap={{ scale: 0.9, backgroundColor: "#608FC2" }}
+                    className="rounded-lg p-[1vh] w-[80%] hover:underline text-white"
+                    onClick={() => {
+                      if (acc.role === "teacher") {
+                        router.push(`/admin/users/editteacher/${acc.id}`)
+                      } else if (acc.role === "parent") {
+                        router.push(`/admin/users/editparent/${acc.id}`)
+                      } else {
+                        alert("Role ini belum punya halaman edit!");
+                      }
+                    }}
+                  >
+                    Edit
+                  </motion.button>
+                </td>
+              </tr>
+            ))}
+        </tbody>
 
-        <td className="px-4 py-3 text-gray-700">
-          <motion.button
-            initial={{ backgroundColor: "#0D58AB" }}
-            whileHover={{ scale: 1.1, backgroundColor: "#0B3869" }}
-            whileTap={{ scale: 0.9, backgroundColor: "#608FC2" }}
-            className="rounded-lg p-[1vh] w-[80%] hover:underline text-white"
-          >
-            Edit
-          </motion.button>
-        </td>
-      </tr>
-    ))}
-</tbody>
       </table>
     </div>
   );
