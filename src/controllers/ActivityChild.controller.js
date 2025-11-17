@@ -27,6 +27,20 @@ export const listMine = async (req, res, next) => {
   }
 };
 
+export const listAll = async (req, res, next) => {
+  try {
+    const rows = await Attendance.find()
+      .populate("childID", "name")
+      .populate("teacherID", "name")
+      .sort({ date: -1 });
+
+    res.json(rows);
+  } catch (e) {
+    next(e);
+  }
+};
+
+
 export const detail = async (req, res, next) => {
   try {
     const item = await ActivityChild.findById(req.params.id);

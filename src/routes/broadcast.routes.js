@@ -15,4 +15,5 @@ r.post("/", roleRequired("admin","teacher"), ctrl.create);
 r.put("/:id", roleRequired("admin","teacher"), ctrl.update);
 r.delete("/:id", roleRequired("admin"), ctrl.remove);
 
+
 export default r;
