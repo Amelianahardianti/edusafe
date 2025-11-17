@@ -1,257 +1,129 @@
 "use client";
-import React, { useState } from "react";
-import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
 import { apiFetch } from "@/lib/api";
+import { motion } from "framer-motion";
 
-export default function KritikDanSaran() {
-  const [message, setMessage] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [success, setSuccess] = useState(false);
-  const [error, setError] = useState("");
+export default function AdminKritikDanSaran() {
+  const [feedbacks, setFeedbacks] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [filter, setFilter] = useState("all"); // all | read | unread
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    if (!message.trim()) {
-      setError("Pesan tidak boleh kosong.");
-      return;
+  // Load data dari backend
+  useEffect(() => {
+    async function load() {
+      try {
+        const result = await apiFetch("/api/feedbacks");// GET semua feedback
+        setFeedbacks(Array.isArray(result) ? result : result.data || []);
+      } catch (err) {
+        console.error("Gagal load feedback:", err);
+      } finally {
+        setLoading(false);
+      }
     }
+    load();
+  }, []);
 
-    setLoading(true);
-    setError("");
-    setSuccess(false);
+  const deleteFeedback = async (id) => {
+    if (!confirm("Hapus feedback ini?")) return;
 
     try {
-      await apiFetch("/api/feedbacks", {
-        method: "POST",
-        body: JSON.stringify({ message }),
-      });
-      setSuccess(true);
-      setMessage("");
-      setTimeout(() => setSuccess(false), 3000);
+      await apiFetch(`/api/feedbacks/${id}`, { method: "DELETE" });
+      setFeedbacks((prev) => prev.filter((f) => f._id !== id));
     } catch (err) {
-      setError(err.message || "Gagal mengirim saran. Silakan coba lagi.");
-    } finally {
-      setLoading(false);
+      console.error("Gagal hapus:", err);
     }
   };
 
+  // Hitung jumlah unread (jika mau pakai fitur read)
+  const unreadCount = feedbacks.length;
+
+  const filtered = feedbacks;
+
+  if (loading) {
+    return (
+      <div className="p-10 text-center text-gray-500">Memuat data...</div>
+    );
+  }
+
   return (
-    <div className="min-h-screen bg-[#F5F7FA] py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-[#F5F7FA] py-12 px-4">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        className="max-w-4xl mx-auto"
+        transition={{ duration: 0.4 }}
+        className="max-w-6xl mx-auto"
       >
         {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2, duration: 0.5 }}
-          className="text-center mb-12"
-        >
-          <motion.div
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
-            transition={{ delay: 0.3, type: "spring", stiffness: 200 }}
-            className="inline-block mb-4"
-          >
-            <div className="w-20 h-20 bg-gradient-to-br from-[#0D58AB] to-[#1B77D2] rounded-2xl flex items-center justify-center shadow-lg shadow-blue-500/30">
-              <svg
-                className="w-10 h-10 text-white"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"
-                />
-              </svg>
+        <div className="flex items-center justify-between mb-8">
+          <div>
+            <h1 className="text-4xl font-bold text-[#0B3869]">Kritik & Saran</h1>
+            <p className="text-gray-600">
+              Dashboard Admin — masukan dari orang tua & guru
+            </p>
+          </div>
+
+          <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-xl shadow">
+            <div className="w-3 h-3 bg-red-500 rounded-full animate-pulse" />
+            <span className="text-sm font-semibold text-gray-700">
+              {unreadCount} Data Masuk
+            </span>
+          </div>
+        </div>
+
+        {/* Feedback List */}
+        <div className="space-y-4 relative">
+          {filtered.length === 0 ? (
+            <div className="bg-white p-10 rounded-2xl shadow text-center">
+              <p className="text-gray-500">Belum ada feedback</p>
             </div>
-          </motion.div>
-          <h1 className="text-4xl md:text-5xl font-bold text-[#0B3869] mb-3">
-            Kritik & Saran
-          </h1>
-          <p className="text-lg text-gray-600">
-            Suara Anda sangat berarti untuk kami! 
-          </p>
-        </motion.div>
-
-        {/* Main Card */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 0.4, duration: 0.5 }}
-          className="bg-white rounded-3xl shadow-lg p-8 md:p-12 border border-[#DFE8F2]"
-        >
-          {/* Success Message */}
-          {success && (
-            <motion.div
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              className="mb-6 p-4 bg-gradient-to-r from-green-50 to-emerald-50 border-l-4 border-green-500 rounded-xl"
-            >
-              <div className="flex items-center">
-                <svg
-                  className="w-6 h-6 text-green-500 mr-3"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-                  />
-                </svg>
-                <p className="text-green-800 font-semibold">
-                  Terima kasih! Saran Anda berhasil terkirim 🎉
-                </p>
-              </div>
-            </motion.div>
-          )}
-
-          {/* Error Message */}
-          {error && (
-            <motion.div
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="mb-6 p-4 bg-gradient-to-r from-red-50 to-pink-50 border-l-4 border-red-500 rounded-xl"
-            >
-              <div className="flex items-center">
-                <svg
-                  className="w-6 h-6 text-red-500 mr-3"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                  />
-                </svg>
-                <p className="text-red-800 font-semibold">{error}</p>
-              </div>
-            </motion.div>
-          )}
-
-          <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Textarea */}
-            <div>
-              <label
-                htmlFor="message"
-                className="block text-lg font-semibold text-gray-800 mb-3"
+          ) : (
+            filtered.map((fb, i) => (
+              <motion.div
+                key={fb._id}
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: i * 0.05 }}
+                className="bg-white p-6 rounded-2xl shadow hover:shadow-lg transition border border-gray-100"
               >
-                Sampaikan Kritik & Saran Anda untuk Admin
-              </label>
-              <motion.textarea
-                whileFocus={{ scale: 1.01 }}
-                id="message"
-                name="message"
-                rows={8}
-                className="w-full rounded-2xl border-2 border-gray-200 p-4 text-gray-800 placeholder-gray-400 resize-none focus:outline-none focus:ring-4 focus:ring-blue-500/20 focus:border-[#0D58AB] transition-all duration-300 shadow-sm hover:shadow-md"
-                placeholder="Ketik kritik atau saran Anda di sini... Kami mendengarkan dengan serius! 💬"
-                value={message}
-                onChange={(e) => setMessage(e.target.value)}
-              />
-              <p className="mt-2 text-sm text-gray-500">
-                Minimal 10 karakter • {message.length} karakter
-              </p>
-            </div>
+                {/* Header card */}
+                <div className="flex justify-between items-start mb-3">
+                  {/* Nama */}
+                  <div className="flex items-center gap-3">
+                    <div className="w-12 h-12 bg-gradient-to-br from-[#0D58AB] to-[#1B77D2] rounded-full flex items-center justify-center text-white font-bold text-lg">
+                      {fb.parentID?.name?.split(" ")[0][0] || "?"}
+                    </div>
 
-            {/* Submit Button */}
-            <motion.button
-              type="submit"
-              disabled={loading || message.length < 10}
-              whileHover={{ scale: loading ? 1 : 1.02 }}
-              whileTap={{ scale: loading ? 1 : 0.98 }}
-              className={`w-full py-4 rounded-2xl font-bold text-lg shadow-lg transition-all duration-300 ${
-                loading || message.length < 10
-                  ? "bg-gray-300 text-gray-500 cursor-not-allowed shadow-none"
-                  : "bg-gradient-to-r from-[#0D58AB] to-[#1B77D2] text-white hover:shadow-xl hover:shadow-blue-500/40 hover:from-[#0B437F] hover:to-[#155EA9]"
-              }`}
-            >
-              {loading ? (
-                <span className="flex items-center justify-center gap-2">
-                  <motion.span
-                    animate={{ rotate: 360 }}
-                    transition={{ repeat: Infinity, duration: 1, ease: "linear" }}
-                    className="inline-block w-5 h-5 border-3 border-white border-t-transparent rounded-full"
-                  />
-                  Mengirim...
-                </span>
-              ) : (
-                <span className="flex items-center justify-center gap-2">
-                  <svg
-                    className="w-6 h-6"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"
-                    />
-                  </svg>
-                  Kirim Saran
-                </span>
-              )}
-            </motion.button>
-          </form>
+                    <div>
+                      <h3 className="font-semibold text-gray-800">
+                        {fb.parentID?.name || "Pengguna"}
+                      </h3>
 
-          {/* Info Card */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.6, duration: 0.5 }}
-            className="mt-8 p-6 bg-[#DFE8F2] rounded-2xl border border-[#0B3869]/10"
-          >
-            <div className="flex items-start gap-4">
-              <div className="flex-shrink-0">
-                <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
-                  <svg
-                    className="w-6 h-6 text-blue-600"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                    />
-                  </svg>
+                      <span className="text-xs px-2 py-1 bg-purple-100 text-purple-700 rounded-full">
+                        Orang Tua
+                      </span>
+                    </div>
+                  </div>
                 </div>
-              </div>
-              <div>
-                <h3 className="font-semibold text-gray-800 mb-1">
-                  Kenapa kritik & saran penting?
-                </h3>
-                <p className="text-sm text-gray-600 leading-relaxed">
-                  Setiap masukan dari Anda membantu kami meningkatkan kualitas
-                  layanan EduSafe. Tim kami akan membaca dan mempertimbangkan
-                  setiap saran dengan serius untuk menciptakan pengalaman yang
-                  lebih baik.
-                </p>
-              </div>
-            </div>
-          </motion.div>
-        </motion.div>
 
-        {/* Decorative Elements */}
-        <div className="absolute top-20 left-10 w-20 h-20 bg-blue-200/30 rounded-full blur-3xl -z-10" />
-        <div className="absolute bottom-20 right-10 w-32 h-32 bg-indigo-200/30 rounded-full blur-3xl -z-10" />
+                {/* pesan */}
+                <p className="text-gray-700 mb-3">{fb.message}</p>
+
+                {/* date */}
+                <p className="text-xs text-gray-500">
+                  {new Date(fb.createdAt).toLocaleDateString("id-ID")} •{" "}
+                  {new Date(fb.createdAt).toLocaleTimeString("id-ID", {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  })}
+                </p>
+              </motion.div>
+            ))
+          )}
+
+          {/* Decorative circles (optional aesthetic) */}
+          <div className="absolute top-20 left-5 w-24 h-24 bg-blue-200/40 rounded-full blur-2xl -z-10" />
+          <div className="absolute bottom-20 right-5 w-32 h-32 bg-indigo-200/40 rounded-full blur-2xl -z-10" />
+        </div>
       </motion.div>
     </div>
   );

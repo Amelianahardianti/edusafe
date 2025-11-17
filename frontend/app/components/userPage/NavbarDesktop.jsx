@@ -4,10 +4,13 @@ import Image from "next/image";
 import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
 import Saran from "@/app/components/userPage/Saran";
+import { useAuthGuard } from "@/hooks/useAuthGuard";
+
 
 const Navbar = () => {
   const router = useRouter();
   const pathname = usePathname();
+  const { user, loading } = useAuthGuard(); 
   const [isSaranOpen, setIsSaranOpen] = useState(false);
 
   
@@ -72,12 +75,25 @@ const Navbar = () => {
 
         <li
           className="cursor-pointer font-code hover:bg-[#FF3B8F] hover:text-black flex items-center justify-center h-full w-[10vw] bg-[#0B3869] text-white"
-           onClick={() => setIsSaranOpen(true)}
+          onClick={() => {
+            if (!user) return; // safety
+
+            if (user.role === "admin") {
+              router.push("/admin/saran");
+            } else if (user.role === "parent") {
+              setIsSaranOpen(true);
+            } else if (user.role === "teacher") {
+              router.push("/teacher/saran");
+            } else {
+              alert("Role tidak dikenali.");
+            }
+          }}
         >
           <span className="block w-full h-full text-center leading-[5vw]">
             Kritik & Saran
           </span>
         </li>
+
          <li className="cursor-pointer font-code bg-[#0B3869] hover:bg-[#FF3B8F] hover:text-black text-white flex items-center justify-center h-full w-[9vw]"
           onClick={handleLogout}>
           <Link href="#" className="block w-full h-full text-center leading-[5vw]">

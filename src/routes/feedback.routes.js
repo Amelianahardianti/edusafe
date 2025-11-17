@@ -7,5 +7,6 @@ r.use(authMiddleware);
 
 r.get("/", roleRequired("admin","teacher","parent"), ctrl.list);
 r.post("/", roleRequired("parent"), ctrl.create);
+r.delete("/:id", roleRequired("admin"), ctrl.remove);
 
 export default r;

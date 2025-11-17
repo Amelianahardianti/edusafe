@@ -19,3 +19,19 @@ export const list = async (req,res,next)=>{
     res.json(rows);
   } catch(e){ next(e); }
 };
+
+
+export const remove = async (req, res, next) => {
+  try {
+    const deleted = await Feedback.findByIdAndDelete(req.params.id);
+    if (!deleted) {
+      return res.status(404).json({ msg: "Feedback not found" });
+    }
+
+    res.json({ msg: "Feedback deleted" });
+  } catch (e) {
+    next(e);
+  }
+};
+
+
