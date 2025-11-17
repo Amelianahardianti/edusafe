@@ -6,10 +6,10 @@ import { cacheGet, cacheSet, cacheFor } from "../middlewares/cache.js";
 const r = Router();
 r.use(authMiddleware);
 
+
+r.get("/", roleRequired("admin", "teacher"), ctrl.listAll);
 r.get("/child/:childId", ctrl.listByChild);
-
 r.get("/recap/weekly/:childId", cacheFor(600), cacheGet, cacheSet, ctrl.recapWeekly);
-
 r.post("/", roleRequired("admin", "teacher"), ctrl.create);
 r.put("/:id", roleRequired("admin", "teacher"), ctrl.update);
 
