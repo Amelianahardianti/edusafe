@@ -6,6 +6,7 @@ const r = Router();
 
 r.use(authMiddleware);
 r.use(roleRequired("admin"));
+r.get("/teachers", roleRequired("admin"), ctrl.listTeachers);
 r.get("/accounts", ctrl.getAccounts);
 r.get("/", ctrl.getUsers); //admin lihat semua user
 r.get("/:id", ctrl.detail); //admin lihat detail user

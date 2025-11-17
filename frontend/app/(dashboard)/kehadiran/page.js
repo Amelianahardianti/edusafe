@@ -3,30 +3,51 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { apiFetch } from "@/lib/api";
+import { useAuthGuard } from "@/hooks/useAuthGuard";
 
 export default function Tabel() {
   const [attendance, setAttendance] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selected, setSelected] = useState(null); 
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const { user, loading: authLoading } = useAuthGuard();
 
 
-  useEffect(() => {
-    async function load() {
-      try {
-        const result = await apiFetch("/api/attendance");
-        const finalData = Array.isArray(result)
-          ? result
-          : result.data || [];
-        setAttendance(finalData);
-      } catch (err) {
-        console.error("Gagal load attendance:", err);
-      } finally {
-        setLoading(false);
-      }
-    }
-    load();
-  }, []);
+      useEffect(() => {
+        if (!user) return; 
+
+        async function load() {
+          try {
+            let result;
+
+            if (user.role === "parent") {
+              const childId = user.childIDs?.[0];
+              if (!childId) {
+                return console.error("Parent tidak punya childID");
+              }
+              result = await apiFetch(`/api/attendance/child/${childId}`);
+            } if (user.role === "teacher") {
+              result = await apiFetch("/api/attendance/teacher");
+            }  else {
+              result = await apiFetch("/api/attendance");
+            }
+
+            const finalData = Array.isArray(result)
+              ? result
+              : result.data || [];
+
+            setAttendance(finalData);
+
+          } catch (err) {
+            console.error("Gagal load attendance:", err);
+          } finally {
+            setLoading(false);
+          }
+        }
+
+        load();
+      }, [user]);
+
 
   async function handleUpdate() {
   try {
@@ -127,18 +148,21 @@ export default function Tabel() {
 
               {/* Action */}
               <td className="px-4 py-3">
-                  <motion.button
-                    initial={{ backgroundColor: "#0D58AB" }}
-                    whileHover={{ scale: 1.1, backgroundColor: "#0B3869" }}
-                    whileTap={{ scale: 0.9, backgroundColor: "#608FC2" }}
-                    className="rounded-lg p-[1vh] w-[80%] hover:underline text-white"
-                    onClick={() => {
-                      setSelected(item);
-                      setIsModalOpen(true);
-                    }}
-                  >
-                    Edit
-                  </motion.button>
+                  {user.role !== "parent" && (
+                    <motion.button
+                      initial={{ backgroundColor: "#0D58AB" }}
+                      whileHover={{ scale: 1.1, backgroundColor: "#0B3869" }}
+                      whileTap={{ scale: 0.9, backgroundColor: "#608FC2" }}
+                      className="rounded-lg p-[1vh] w-[80%] hover:underline text-white"
+                      onClick={() => {
+                        setSelected(item);
+                        setIsModalOpen(true);
+                      }}
+                    >
+                      Edit
+                    </motion.button>
+)}
+
 
               </td>
             </tr>

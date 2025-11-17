@@ -8,6 +8,7 @@ r.use(authMiddleware);
 
 
 r.get("/", roleRequired("admin", "teacher"), ctrl.listAll);
+r.get("/teacher", roleRequired("teacher"), ctrl.listForTeacher);
 r.get("/child/:childId", ctrl.listByChild);
 r.get("/recap/weekly/:childId", cacheFor(600), cacheGet, cacheSet, ctrl.recapWeekly);
 r.post("/", roleRequired("admin", "teacher"), ctrl.create);

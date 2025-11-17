@@ -1,17 +1,19 @@
 import bcrypt from 'bcryptjs';
-import user from '../models/User.js';
+import User from "../models/User.js";
 import Child from "../models/Child.js";
+
+
 
 export const getUsers = async (req, res) =>{
   const q = {};
   if (req.query.role)  q.role = req.query.role;
-  const rows = await user.find(q).select('-password').sort({ createdAt: -1 });
+  const rows = await User.find(q).select('-password').sort({ createdAt: -1 });
   res.json(rows);
 };
 
 
 export const detail = async (req, res) =>{
-  const u = await user.findById(req.params.id).select('-password');
+  const u = await User.findById(req.params.id).select('-password');
   if(!u) return res.status(404).json({msg: 'not found'});
   res.json(u);
 };
@@ -59,7 +61,7 @@ export const update = async (req, res) => {
     update.role = role;
   }
 
-  const u = await user.findByIdAndUpdate(
+  const u = await User.findByIdAndUpdate(
     req.params.id,
     update,
     { new: true, runValidators: true }
@@ -71,14 +73,14 @@ export const update = async (req, res) => {
 
 
 export const remove = async (req, res) =>{
-    const del = await user.findByIdAndDelete(req.params.id);
+    const del = await User.findByIdAndDelete(req.params.id);
     if(!del) return res.status(404).json({msg: 'not found'});
     res.json({ok: true});
 };
 
 export const getAccounts = async (req, res) => {
   try {
-    const users = await user.find().select("-password").lean();
+    const users = await User.find().select("-password").lean();
 
     const combined = await Promise.all(
       users.map(async (u) => {
@@ -106,4 +108,14 @@ export const getAccounts = async (req, res) => {
     res.status(500).json({ msg: "server error" });
   }
 };
+
+export const listTeachers = async (req, res, next) => {
+  try {
+    const teachers = await User.find({ role: "teacher" }).select("_id name");
+    res.json(teachers);
+  } catch (e) {
+    next(e);
+  }
+};
+
 

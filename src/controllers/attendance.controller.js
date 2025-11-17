@@ -123,3 +123,36 @@ export const listAll = async (req, res, next) => {
     next(e);
   }
 };
+
+export const listForTeacher = async (req, res, next) => {
+  try {
+    const teacherId = req.user.sub;
+
+    // cari kelas yang dia ampu
+    const classes = await Class.find({
+      homeroomTeacherIDs: teacherId
+    }).lean();
+
+    if (!classes.length) {
+      return res.json([]); // teacher belum punya kelas
+    }
+
+    // ambil anak dari kelas tsb
+    const childIds = await Child.find({
+      classID: { $in: classes.map(c => c._id) }
+    }).distinct("_id");
+
+    // ambil attendance anak
+    const rows = await Attendance.find({
+      childID: { $in: childIds }
+    })
+      .populate("childID", "name")
+      .populate("teacherID", "name")
+      .sort({ date: -1 });
+
+    res.json(rows);
+  } catch (e) {
+    next(e);
+  }
+};
+
