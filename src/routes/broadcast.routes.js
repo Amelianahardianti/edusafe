@@ -6,10 +6,11 @@ import { cacheGet, cacheSet, cacheFor } from "../middlewares/cache.js";
 const r = Router();
 r.use(authMiddleware);
 r.get("/all", roleRequired("admin"),cacheFor(300), cacheGet, cacheSet, ctrl.listAll);
-r.get("/", cacheFor(300), cacheGet, cacheSet, ctrl.listActive);
+r.get("/teacher", roleRequired("teacher"), cacheFor(300), cacheGet, cacheSet, ctrl.listForTeacher);
+r.get("/parent", roleRequired("parent"), cacheFor(300), cacheGet, cacheSet, ctrl.listForParent);
 
 r.post("/", roleRequired("admin","teacher"), ctrl.create);
 r.put("/:id", roleRequired("admin","teacher"), ctrl.update);
-r.delete("/:id", roleRequired("admin"), ctrl.remove);
+r.delete("/:id", roleRequired("admin", "teacher"), ctrl.remove);
 
 export default r;
