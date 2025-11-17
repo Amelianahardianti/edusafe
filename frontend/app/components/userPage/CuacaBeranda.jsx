@@ -54,35 +54,31 @@ const CuacaBeranda = ( {weather} ) => {
     };
    
     return(
-        <div className="rounded-lg bg-[#FFED24] flex flex-col h-auto ">
-            <div className="lg:flex justify-between px-[2vh] items-center">
+        <div className="rounded-t-lg bg-[#FFED24] flex flex-col">
+            <div className="lg:flex justify-between px-6 py-4 items-center">
                 <div>
-                    <div className="font-bold text-2xl"> Cuaca Hari Ini</div>
-                    <div> {formatDate()}</div>
-
+                    <div className="font-bold text-2xl text-[#0B3869]"> Cuaca Hari Ini</div>
+                    <div className="text-sm mt-1"> {formatDate()}</div>
                 </div>
-                <div className=""> 
+                <div className="mt-3 lg:mt-0"> 
                     <motion.button
-                        whileHover={{ scale: 1.1 }}
-                        whileTap={{ scale: 0.9 }}
-                        className=" bg-[#0B3869] rounded-lg p-[1vh] text-white"
-                        
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        className="bg-[#0B3869] rounded-lg px-4 py-2 text-white text-sm font-medium shadow-md hover:shadow-lg transition-shadow"
                     >
                         Lebih Lanjut 
                     </motion.button>
-
                 </div>
             </div>
-            <div className="grid lg:grid-flow-row lg:grid-cols-6 h-auto font-bold text-center ">
+            <div className="grid grid-cols-3 lg:grid-cols-6 font-bold text-center">
                   {weatherForecast.map((item, index) => (
-                    <div key={index} className={`flex flex-col items-center ${index % 2 === 0 ? 'bg-yellow-200' : 'bg-white'}`}>
-                        <div className="">{item.hour}</div>
-                       icon
-                        <div className="capitalize">{item.weather}</div>
+                    <div key={index} className={`flex flex-col items-center justify-center py-4 px-2 ${index % 2 === 0 ? 'bg-yellow-200' : 'bg-white'}`}>
+                        <div className="text-sm mb-1">{item.hour}</div>
+                        <div className="text-2xl my-2">☁️</div>
+                        <div className="capitalize text-xs">{item.weather}</div>
                     </div>
                 ))}
             </div>
-
         </div>
     )
 }

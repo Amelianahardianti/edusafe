@@ -1,6 +1,6 @@
 "use client";
 import { motion } from "framer-motion";
-import DaftarKelas from "@/app/components/userPage/DaftarKelas";
+import NotificationSaranPage from "@/app/components/userPage/NotificationSaranPage";
 
 const notifications = [
   {
@@ -43,7 +43,7 @@ export default function DaftarKelasPage() {
                     </motion.button></div>
       
       {notifications.map((notification) => (
-        <DaftarKelas
+        <NotificationSaranPage
           key={notification.id}
           headline={notification.headline}
           text={notification.body}
