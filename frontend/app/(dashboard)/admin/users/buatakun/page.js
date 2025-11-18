@@ -105,6 +105,19 @@ export default function CreateAccount() {
     const childName = form.childName?.value.trim() || "";
     const childBirthDate = form.childBirthDate?.value || "";
 
+    const payload = {
+      name,
+      email,
+      password,
+      role,
+    };
+    
+    if (role === "parent") {
+      payload.childName = childName;
+      payload.childBirthDate = childBirthDate; // 'YYYY-MM-DD'
+      payload.childClass = childClass;         // kalau mau dipakai nanti
+    } 
+
     if (!role) {
       setError("Role wajib dipilih");
       return;
@@ -121,12 +134,7 @@ export default function CreateAccount() {
     try {
       const newUser = await apiFetch("/api/users", {
         method: "POST",
-        body: JSON.stringify({
-          name,
-          email,
-          password,
-          role,
-        }),
+        body: JSON.stringify(payload),
       });
 
       console.log("User created:", newUser);

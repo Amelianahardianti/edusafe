@@ -18,9 +18,34 @@ export const detail = async (req, res) =>{
   res.json(u);
 };
 
+async function upsertChildForParent({ parentId, childName, childBirthDate }) {
+  if (!childName) return;
+try {
+  const name = childName.trim();
+  const query = { name };
+  if (childBirthDate) query.birthDate = childBirthDate;
+
+  let child = await Child.findOne(query);
+
+  if (!child) {
+    child = await Child.create({
+      name,
+      birthDate: childBirthDate || null,
+      parentID: parentId,
+    });
+  } else {
+    child.parentID = parentId;
+    await child.save();
+  }
+} catch (err) {
+  console.error("UPSERT CHILD ERROR", err);}
+}
+
+
+
 export const create = async (req, res) => {
   try {
-    const { name, email, password, role } = req.body;
+    const { name, email, password, role, childName, childBirthDate} = req.body;
     if (!email) return res.status(400).json({ msg: "email is required" });
     if (!password) return res.status(400).json({ msg: "password is required" });
     if (!["admin", "teacher", "parent"].includes(role)) {
@@ -35,6 +60,14 @@ export const create = async (req, res) => {
       role,
     });
 
+    if (role === "parent") {
+      await upsertChildForParent({
+        parentId: u._id,
+        childName,
+        childBirthDate,
+      });
+    }
+
     return res
       .status(201)
       .json({ id: u._id, name: u.name, email: u.email, role: u.role });
@@ -42,34 +75,52 @@ export const create = async (req, res) => {
     if (error.code === 11000) {
       return res.status(400).json({ msg: "email already exists" });
     }
-    console.error(error);
-    return res.status(500).json({ msg: "server error" });
+    console.error("CREATE USER ERROR", error);
+    return res
+      .status(500)
+      .json({ msg: error.message || "server error" });
   }
 };
 
 
 export const update = async (req, res) => {
-  const { name, email, password, role } = req.body;
-  const update = {};
+  try {
+    const { name, email, password, role, childName, childBirthDate } = req.body;
+    const update = {};
 
-  if (name) update.name = name;
-  if (email) update.email = email.trim().toLowerCase();
-  if (password) update.password = await bcrypt.hash(password, 10);
-  if (role) {
-    if (!["admin", "teacher", "parent"].includes(role)) {
-      return res.status(400).json({ msg: "invalid role" });
+    if (name) update.name = name;
+    if (email) update.email = email.trim().toLowerCase();
+    if (password) update.password = await bcrypt.hash(password, 10);
+    if (role) {
+      if (!["admin", "teacher", "parent"].includes(role)) {
+        return res.status(400).json({ msg: "invalid role" });
+      }
+      update.role = role;
     }
-    update.role = role;
+
+    const u = await User.findByIdAndUpdate(
+      req.params.id,
+      update,
+      { new: true, runValidators: true }
+    ).select("-password");
+
+    if (!u) return res.status(404).json({ msg: "not found" });
+
+    if (u.role === "parent" && (childName || childBirthDate)) {
+      await upsertChildForParent({
+        parentId: u._id,
+        childName,
+        childBirthDate,
+      });
+    }
+
+    res.json(u);
+  } catch (error) {
+    console.error("UPDATE USER ERROR", error);
+    return res
+      .status(500)
+      .json({ msg: error.message || "server error" });
   }
-
-  const u = await User.findByIdAndUpdate(
-    req.params.id,
-    update,
-    { new: true, runValidators: true }
-  ).select("-password");
-
-  if (!u) return res.status(404).json({ msg: "not found" });
-  res.json(u);
 };
 
 
