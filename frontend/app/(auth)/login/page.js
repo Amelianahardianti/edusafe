@@ -105,6 +105,7 @@ export default function LoginPage() {
                 className="block w-full rounded-md border border-gray-300 px-3 py-2"
                 placeholder="Masukkan email anda"
                 value={email}
+                onKeyDown={(e) => e.key === "Enter" && handleSubmit(e)}
                 onChange={(e) => setEmail(e.target.value)}
                 required
               />
@@ -131,6 +132,7 @@ export default function LoginPage() {
                           className="block w-full rounded-md border border-gray-300 px-3 py-2 pr-16 focus:border-blue-500 focus:ring-blue-500"
                           placeholder="Masukkan password"
                           value={password}
+                          onKeyDown={(e) => e.key === "Enter" && handleSubmit(e)}
                           onChange={(e) => setPassword(e.target.value)}
                           required
                         />
