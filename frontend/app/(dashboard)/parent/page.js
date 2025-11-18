@@ -1,12 +1,16 @@
 'use client';
-
+import { useEffect, useState } from "react";
 import ActivityBeranda from '@/app/components/userPage/ActivityBeranda';
 import NotifBeranda from '@/app/components/userPage/NotifBeranda';
 import { motion } from 'framer-motion';
 import TabelBeranda from '@/app/components/userPage/TabelBeranda';
-import CuacaBeranda from '@/app/components/userPage/CuacaBeranda';
+import CuacaBeranda from '@/app/components/userPage/CuacaBeranda';4
+import { apiFetch } from "@/lib/api";
+import { useAuthGuard } from "@/hooks/useAuthGuard";
 
-export default function ParentDashboard() {
+export default function ParentDashboard()
+ {
+   
   return (
     <div className="min-h-screen bg-[#F5F7FA]">
       <main className="px-6 sm:px-8 lg:px-12 py-8">
@@ -53,7 +57,7 @@ export default function ParentDashboard() {
                 time_from="07.00"
                 time_to="08.30"
                 sender="Ir. Lorem Ipsum S.Pd.Fil"
-                style="w-full h-auto"
+                style="w-full h-auto xl:ml-[4vh]"
               />
             </div>
           </motion.div>

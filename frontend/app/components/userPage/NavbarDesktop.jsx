@@ -5,6 +5,7 @@ import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
 import Saran from "@/app/components/userPage/Saran";
 import { useAuthGuard } from "@/hooks/useAuthGuard";
+import { motion } from "framer-motion";
 
 
 const Navbar = () => {
@@ -44,37 +45,58 @@ const Navbar = () => {
 
       {/* Navbar */}
       <ul className="flex h-full">
-        <li className="cursor-pointer font-code bg-[#0B3869] hover:bg-[#24C1DC] hover:text-black text-white flex items-center justify-center h-full w-[10vw]">
+        <motion.li 
+        initial={{  backgroundPositionX: '80%' }}
+        whileHover={{  backgroundColor: "#24C1DC" , backgroundPositionX: '100%'}}
+        className="cursor-pointer rounded-lg font-code bg-[#0B3869]  hover:text-black text-white flex items-center justify-center h-full w-[10vw]">
           <Link href={baseRoute || "/"}  className="block w-full h-full text-center leading-[5vw]">
             Beranda
           </Link>
-        </li>
+        </motion.li>
 
-        <li className="cursor-pointer font-code bg-[#0B3869] hover:bg-[#24C1DC] hover:text-black text-white flex items-center justify-center h-full w-[13vw]">
+        <motion.li
+          className="cursor-pointer rounded-lg font-code bg-[#0B3869] hover:text-black text-white flex items-center justify-center h-full w-[13vw]"
+          initial={{  backgroundPositionX: '80%' }}
+          whileHover={{  backgroundColor: "#24C1DC" , backgroundPositionX: '100%'}}
+        >
           <Link href={`${baseRoute}/aktivitas`} className="block w-full h-full text-center leading-[5vw]">
             Aktivitas
           </Link>
-        </li>
+        </motion.li>
 
-        <li className="cursor-pointer font-code bg-[#0B3869] hover:bg-[#FFED24] hover:text-black text-white flex items-center justify-center h-full w-[13.5vw]">
+        <motion.li
+          className="cursor-pointer rounded-lg font-code bg-[#0B3869]  hover:text-black text-white flex items-center justify-center h-full w-[13.5vw]"
+          initial={{  backgroundPositionX: '80%' }}
+          whileHover={{  backgroundColor: "#FFED24" , backgroundPositionX: '100%'}}
+        >
           <Link href={`${baseRoute}/kehadiran`} className="block w-full h-full text-center leading-[5vw]">
             Kehadiran
           </Link>
-        </li>
+        </motion.li>
 
-        <li className="cursor-pointer font-code bg-[#0B3869] hover:bg-[#FFED24] hover:text-black text-white flex items-center justify-center h-full w-[9vw]">
+        <motion.li
+          className="cursor-pointer rounded-lg font-code bg-[#0B3869]  hover:text-black text-white flex items-center justify-center h-full w-[9vw]"
+          initial={{  backgroundPositionX: '80%' }}
+          whileHover={{  backgroundColor: "#FFED24" , backgroundPositionX: '100%'}}
+        >
           <Link href={`${baseRoute}/cuaca`} className="block w-full h-full text-center leading-[5vw]">
             Cuaca
           </Link>
-        </li>
-         <li className="cursor-pointer font-code bg-[#0B3869] hover:bg-[#FF3B8F] hover:text-black text-white flex items-center justify-center h-full w-[9vw]">
+        </motion.li>
+        <motion.li
+          className="cursor-pointer rounded-lg font-code bg-[#0B3869]  hover:text-black text-white flex items-center justify-center h-full w-[9vw]"
+          initial={{  backgroundPositionX: '80%' }}
+          whileHover={{  backgroundColor: "#FF3B8F" , backgroundPositionX: '100%'}}
+        >
           <Link href={`${baseRoute}/notifikasi`} className="block w-full h-full text-center leading-[5vw]">
             Notifikasi
           </Link>
-        </li>
+        </motion.li>
 
-        <li
-          className="cursor-pointer font-code hover:bg-[#FF3B8F] hover:text-black flex items-center justify-center h-full w-[10vw] bg-[#0B3869] text-white"
+        <motion.li
+           initial={{  backgroundPositionX: '80%' }}
+          whileHover={{  backgroundColor: "#FF3B8F" , backgroundPositionX: '100%'}}
+          className="cursor-pointer rounded-lg font-code  hover:text-black flex items-center justify-center h-full w-[10vw] bg-[#0B3869] text-white"
           onClick={() => {
             if (!user) return; // safety
 
@@ -92,14 +114,18 @@ const Navbar = () => {
           <span className="block w-full h-full text-center leading-[5vw]">
             Kritik & Saran
           </span>
-        </li>
+        </motion.li>
 
-         <li className="cursor-pointer font-code bg-[#0B3869] hover:bg-[#FF3B8F] hover:text-black text-white flex items-center justify-center h-full w-[9vw]"
-          onClick={handleLogout}>
+        <motion.li
+          className="cursor-pointer rounded-lg font-code bg-[#0B3869]  hover:text-black text-white flex items-center justify-center h-full w-[9vw]"
+           initial={{  backgroundPositionX: '80%' }}
+          whileHover={{  backgroundColor: "#FF3B8F" , backgroundPositionX: '100%'}}
+          onClick={handleLogout}
+        >
           <Link href="#" className="block w-full h-full text-center leading-[5vw]">
             Logout
           </Link>
-        </li>
+        </motion.li>
       </ul>
     </div>
     <Saran open={isSaranOpen} onClose={() => setIsSaranOpen(false)} />

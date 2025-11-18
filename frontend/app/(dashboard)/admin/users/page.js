@@ -50,7 +50,7 @@ export default function Tabel() {
             <th className="px-4 py-3 text-left font-semibold">Nama Anak</th>
             <th className="px-4 py-3 text-left font-semibold">Email</th>
             <th className="px-4 py-3 text-left font-semibold">Role</th>
-            <th className="px-4 py-3 text-left font-semibold">Password</th>
+         
             <th className="px-4 py-3 text-left font-semibold">Edit</th>
           </tr>
         </thead>
@@ -76,7 +76,7 @@ export default function Tabel() {
         <td className="px-4 py-3 text-gray-700">{acc.email}</td>
         <td className="px-4 py-3 text-gray-700">{acc.role}</td>
 
-        <td className="px-4 py-3 text-gray-700">-</td>
+        
 
         <td className="px-4 py-3 text-gray-700">
           <motion.button

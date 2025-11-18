@@ -66,12 +66,15 @@ const Saran = ({ open, onClose }) => {
       >
         <div className="flex justify-between items-start mb-[3vh]">
           <h2 className="text-xl font-bold">Kritik dan Saran</h2>
-          <button
+          <motion.button
             onClick={onClose}
-            className="text-gray-600 hover:bg-amber-200 rounded-full h-[3vh] p"
+            initial={{ scale: 1 , backgroundColor: "#FFFFFF" }}
+              whileHover={{ scale: 1.02 , backgroundColor: "#FFB8B8" }}
+              whileTap={{ scale: 0.95 }}
+            className="text-gray-600 hover:bg-amber-200 rounded-full h-[3vh] px-[1vh] pb-[1vh]"
           >
             ✕ Kembali
-          </button>
+          </motion.button>
         </div>
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-y-[3vh]">
@@ -90,12 +93,15 @@ const Saran = ({ open, onClose }) => {
           </div>
 
           <div className=" justify-between">
-            <button
+            <motion.button
               type="submit"
-              className="w-full h-auto py-[2vh] rounded-md bg-[#608FC2] text-white hover:bg-[#4a7ba7] transition-color"
+              initial={{ scale: 1 , backgroundColor: "#608FC2" }}
+              whileHover={{ scale: 1.02 , backgroundColor: "#4a7ba7" }}
+              whileTap={{ scale: 0.95 }}
+              className="w-full h-auto py-[2vh] rounded-md  text-white transition-color"
             >
               Kirim
-            </button>
+            </motion.button>
           </div>
         </form>
       </div>
