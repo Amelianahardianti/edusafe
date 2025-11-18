@@ -46,17 +46,7 @@ export default function CreateAccount() {
   ];
 
   const parentExtraFields = [
-    {
-      id: "childClass",
-      label: "Child Class",
-      type: "select",
-      options: [
-        { value: "Abesar", label: "Abesar" },
-        { value: "Akecil", label: "Akecil" },
-        { value: "Bbesar", label: "Bbesar" },
-        { value: "Bkecil", label: "Bkecil" },
-      ],
-    },
+
     {
       id: "childName",
       label: "Child Name",
@@ -112,7 +102,6 @@ export default function CreateAccount() {
     const password = form.password.value;
     const confirmPassword = form.confirmPassword.value;
 
-    const childClass = form.childClass?.value || "";
     const childName = form.childName?.value.trim() || "";
     const childBirthDate = form.childBirthDate?.value || "";
 

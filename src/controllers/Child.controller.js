@@ -39,6 +39,9 @@ export const create = async (req, res, next) => {
   } catch (e) { next(e); }
 };
 
+
+
+
 // GET /children (admin, teacher, parent via /my)
 export const list = async (req, res, next) => {
   try {
@@ -160,4 +163,27 @@ export const remove = async (req, res, next) => {
     if (!row) return res.status(404).json({ msg: "not found" });
     res.status(204).end();
   } catch (e) { next(e); }
+};
+
+// PATCH /children/:id/remove
+export const removeFromClass = async (req, res, next) => {
+  try {
+    const childId = req.params.id;
+
+    if (!isObjectId(childId)) {
+      return res.status(400).json({ msg: "id invalid" });
+    }
+
+    // cari anak
+    const child = await Child.findById(childId);
+    if (!child) return res.status(404).json({ msg: "child not found" });
+
+    // keluarkan dari kelas
+    child.classId = null;
+    await child.save();
+
+    res.json({ msg: "Child removed from class", child });
+  } catch (e) {
+    next(e);
+  }
 };

@@ -1,12 +1,15 @@
 "use client";
 import { motion, AnimatePresence } from "framer-motion";
 import { useEffect, useState } from "react";
-import { useSearchParams } from "next/navigation";
 import { apiFetch } from "@/lib/api";
+import Link from "next/link";
+import { useSearchParams, useRouter } from "next/navigation";
+
 
 export default function InformasiKelas() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedStudent, setSelectedStudent] = useState(null);
+  const router = useRouter();
 
   const [students, setStudents] = useState([]);
   const [classInfo, setClassInfo] = useState(null);
@@ -58,6 +61,21 @@ export default function InformasiKelas() {
     student.parent.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
+async function handleRemoveFromClass(id) {
+  if (!confirm("Keluarkan siswa dari kelas?")) return;
+
+  try {
+    await apiFetch(`/api/children/${id}/remove`, {
+      method: "PATCH",
+    });
+
+    setStudents(prev => prev.filter(s => s.id !== id));
+  } catch (err) {
+    alert(err.message || "Gagal mengeluarkan siswa dari kelas");
+  }
+}
+
+
 
   return (
     <div className="min-h-screen bg-[#F5F7FA] py-8 px-6">
@@ -95,16 +113,16 @@ export default function InformasiKelas() {
          )}
 
           </div>
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="bg-gradient-to-r from-[#0D58AB] to-[#1B77D2] text-white px-6 py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all flex items-center gap-2"
-          >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-            </svg>
-            Tambah Siswa
-          </motion.button>
+            <Link href={`/admin/daftarkelas/informasikelas/inputsiswa?classId=${classId}`}>
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="bg-gradient-to-r from-[#0D58AB] to-[#1B77D2] text-white px-6 py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all flex items-center gap-2"
+              >
+                + Tambah Siswa
+              </motion.button>
+            </Link>
+
         </motion.div>
 
         {/* Search & Stats */}
@@ -262,13 +280,16 @@ export default function InformasiKelas() {
                           <motion.button
                             whileHover={{ scale: 1.1 }}
                             whileTap={{ scale: 0.9 }}
+                            onClick={() => handleRemoveFromClass(student.id)}
                             className="p-2 hover:bg-red-50 rounded-lg transition-colors group"
-                            title="Hapus"
+                            title="Keluarkan dari kelas"
                           >
                             <svg className="w-5 h-5 text-red-500 group-hover:text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                             </svg>
                           </motion.button>
+
+
                         </div>
                       </td>
                     </motion.tr>
