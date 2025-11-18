@@ -15,30 +15,34 @@ export default function ParentDashboard() {
   useEffect(() => {
     const load = async () => {
       try {
-        const data = await apiFetch('/api/activitychildren/my');
-        const list = data?.activities || [];
-        if (list.length === 0) {
+        const data = await apiFetch('/api/activitychildren');
+        const list = data?.data || [];
+
+        if (!list.length) {
           setLatestActivity(null);
-        } else {
-          const a = list[0];
-          const formattedDate = a.Date
-            ? new Date(a.Date).toLocaleDateString('id-ID', {
-                weekday: 'long',
-                day: '2-digit',
-                month: 'long',
-                year: 'numeric',
-              })
-            : '';
-          setLatestActivity({
-            name: a.ChildID?.name || 'Anak',
-            type: a.Activity || 'Aktivitas',
-            text: a.AdditionalNotes || '',
-            date: formattedDate,
-            time_from: a.TimeStart,
-            time_to: a.TimeEnd,
-            sender: a.TeacherID?.name || 'Guru',
-          });
+          return;
         }
+
+        const a = list[0];
+
+        const formattedDate = a.Date
+          ? new Date(a.Date).toLocaleDateString('id-ID', {
+              weekday: 'long',
+              day: '2-digit',
+              month: 'long',
+              year: 'numeric',
+            })
+          : '';
+
+        setLatestActivity({
+          name: a.ChildID?.name || 'Anak',
+          type: 'Aktivitas',
+          text: a.Activity || '',
+          date: formattedDate,
+          time_from: a.TimeStart || '',
+          time_to: a.TimeEnd || '',
+          sender: a.TeacherID?.name || 'Guru',
+        });
       } catch (error) {
         console.error(error);
         setLatestActivity(null);
@@ -46,6 +50,7 @@ export default function ParentDashboard() {
         setLoadingActivity(false);
       }
     };
+
     load();
   }, []);
 
@@ -89,7 +94,7 @@ export default function ParentDashboard() {
                 </div>
               ) : !latestActivity ? (
                 <div className="bg-white rounded-lg shadow p-6 text-center text-gray-600">
-                  Belum ada catatan aktivitas untuk anak Anda.
+                  Belum ada catatan aktivitas.
                 </div>
               ) : (
                 <ActivityBeranda

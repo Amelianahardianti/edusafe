@@ -30,8 +30,9 @@ export const listMine = async (req, res, next) => {
     const { role, sub: userId, childIDs = [] } = req.user; 
     const q = {};
 
-    if (role === "teacher") q.TeacherID = userId;
-    else if (role === "parent") q.ChildID = { $in: childIDs };
+    if (role === "teacher") {
+      q.TeacherID = userId;
+    }
 
     if (req.query.ChildID) q.ChildID = req.query.ChildID;
 
@@ -41,12 +42,17 @@ export const listMine = async (req, res, next) => {
       if (req.query.to)   q.Date.$lte = new Date(req.query.to);
     }
 
-    const items = await ActivityChild.find(q).sort({ Date: -1 });
+    const items = await ActivityChild.find(q)
+      .populate("ChildID", "name")
+      .populate("TeacherID", "name")
+      .sort({ Date: -1 });
+
     res.json({ data: items });
   } catch (err) {
     next(err);
   }
 };
+
 
 export const listAll = async (req, res, next) => {
   try {

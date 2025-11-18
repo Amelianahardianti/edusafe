@@ -1,4 +1,4 @@
-'use client';
+"use client";
 import React, { useEffect, useState } from "react";
 import weatherData from "@/app/components/mockData/data_center";
 import ActivityBeranda from '@/app/components/userPage/ActivityBeranda';
@@ -99,7 +99,7 @@ export default function ActivityAnakPage() {
           <p className="text-sm text-slate-600 mt-1">{formatDate()}</p>
         </header>
 
-        {/* Bar filter atas (Kelas / Aktivitas / Pemberitahuan + input tanggal) */}
+        {/* Bar filter atas (input tanggal) */}
         <div className="flex flex-wrap items-center gap-2 mb-6">
           {/* pill aktif Kelas */}
           <button className="flex items-center gap-2 bg-[#24C1DC] text-white text-xs md:text-sm font-semibold px-4 py-1 rounded-full">
