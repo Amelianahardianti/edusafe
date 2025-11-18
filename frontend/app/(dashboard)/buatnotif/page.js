@@ -79,7 +79,7 @@ export default function CreateNotification() {
       setSuccess("Notifikasi berhasil dibuat.");
       setTimeout(() => {
         if (user?.role === "teacher") {
-          router.push("/guru/notifikasi");
+          router.push("/teacher/notifikasi");
         } else {
           router.push("/admin/notifikasi");
         }
