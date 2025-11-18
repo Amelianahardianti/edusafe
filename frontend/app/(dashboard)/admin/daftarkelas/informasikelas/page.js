@@ -204,7 +204,7 @@ async function handleRemoveFromClass(id) {
                   <th className="px-6 py-4 text-left text-sm font-semibold text-white">Tanggal Lahir</th>
                   <th className="px-6 py-4 text-left text-sm font-semibold text-white">Orang Tua/Wali</th>
                   <th className="px-6 py-4 text-left text-sm font-semibold text-white">Aktivitas Terakhir</th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-white">Kehadiran</th>
+                 
                   <th className="px-6 py-4 text-center text-sm font-semibold text-white">Aksi</th>
                 </tr>
               </thead>
@@ -234,25 +234,7 @@ async function handleRemoveFromClass(id) {
                           {student.lastActivity}
                         </span>
                       </td>
-                      <td className="px-6 py-4">
-                        <div className="flex items-center gap-2">
-                          <div className="flex-1 bg-gray-200 rounded-full h-2 overflow-hidden">
-                            <motion.div
-                              initial={{ width: 0 }}
-                              animate={{ width: student.attendance }}
-                              transition={{ duration: 1, delay: index * 0.1 }}
-                              className={`h-full rounded-full ${
-                                parseInt(student.attendance) >= 90
-                                  ? 'bg-green-500'
-                                  : parseInt(student.attendance) >= 75
-                                  ? 'bg-yellow-500'
-                                  : 'bg-red-500'
-                              }`}
-                            />
-                          </div>
-                          <span className="text-sm font-semibold text-gray-700 w-12">{student.attendance}</span>
-                        </div>
-                      </td>
+                      
                       <td className="px-6 py-4">
                         <div className="flex items-center justify-center gap-2">
                           <motion.button
@@ -267,16 +249,7 @@ async function handleRemoveFromClass(id) {
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                             </svg>
                           </motion.button>
-                          <motion.button
-                            whileHover={{ scale: 1.1 }}
-                            whileTap={{ scale: 0.9 }}
-                            className="p-2 hover:bg-green-50 rounded-lg transition-colors group"
-                            title="Edit"
-                          >
-                            <svg className="w-5 h-5 text-green-600 group-hover:text-green-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                            </svg>
-                          </motion.button>
+                        
                           <motion.button
                             whileHover={{ scale: 1.1 }}
                             whileTap={{ scale: 0.9 }}
@@ -368,10 +341,7 @@ async function handleRemoveFromClass(id) {
                     <p className="text-sm text-gray-600 mb-1">Aktivitas Terakhir</p>
                     <p className="font-semibold text-[#0B3869]">{selectedStudent.lastActivity}</p>
                   </div>
-                  <div className="bg-[#DFE8F2] rounded-xl p-4">
-                    <p className="text-sm text-gray-600 mb-1">Tingkat Kehadiran</p>
-                    <p className="font-semibold text-[#0B3869]">{selectedStudent.attendance}</p>
-                  </div>
+               
                 </div>
 
                 <div className="flex gap-3">

@@ -1,37 +1,55 @@
 "use client";
 import { motion} from 'framer-motion';
 import Link from 'next/link';
+import { apiFetch } from "@/lib/api";
+import { useAuthGuard } from "@/hooks/useAuthGuard";
+import { useEffect, useState } from 'react';
 
-const notifications = [
-  {
-    id: 1,
-    headline: "🎉 New Feature Alert: Dark Mode Available!",
-    body: "You can now switch to the sleek new dark mode theme in your settings. Give your eyes a break!",
-  },
-  {
-    id: 2,
-    headline: "💰 Your Monthly Report is Ready",
-    body: "Check out your personalized financial summary for October. Great progress on your savings goals!",
-  },
-  {
-    id: 3,
-    headline: "📝 Action Required: Update Your Password",
-    body: "For security reasons, we recommend updating your password. This ensures the continued protection of your account.",
-  },
-  {
-    id: 4,
-    headline: "🛠 System Maintenance Tonight at 2 AM",
-    body: "We are performing scheduled maintenance to improve performance. The site may be unavailable for a brief period.",
-  },
-  {
-    id: 5,
-    headline: "⭐ You've Earned a New Badge!",
-    body: "Congratulations! You've unlocked the 'Early Bird' badge for completing a task before 9 AM.",
-  },
-];
 
 
 const NotifBeranda = () => {  
+   const {user, loading: authLoading} = useAuthGuard();
+  const [notifications, setNotifications] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  useEffect(() => {
+      if (authLoading) return;
+      let cancelled = false;
+  
+      async function load(){
+        try {
+          const data = await apiFetch("/api/broadcasts");
+          //const data = await apiFetch("/api/broadcasts/all");
+          console.log("Fetched notifications:", data);
+          if (!cancelled) {
+            const arr = Array.isArray(data) ? data : 
+            data.broadcasts || data.items || data.data ||[];
+            setNotifications(arr);
+          }
+      } catch (err) {
+          if (!cancelled) {
+            setError(err.message || "Gagal memuat notifikasi.");
+          }
+      } finally {
+          if (!cancelled) {
+            setLoading(false);
+          }
+      }
+    }
+      load();
+  
+      return () => {
+        cancelled = true;
+      };
+    }, [authLoading]);
+  
+    if (authLoading || loading) {
+      return (
+         <div className="flex justify-center items-center h-[60vh]">
+          Memuat notifikasi...</div>
+      );
+    }
+    const list = notifications;
     return (
         <div className="backdrop-blur-md  drop-shadow-xl h-auto xl:w-[25vw] rounded-lg border ">
             <div className=" filter-none ">
@@ -40,17 +58,17 @@ const NotifBeranda = () => {
             </div>
             <div className=" "
             >
-              {notifications.map((notification, index) => {
+              {notifications.map((notification) => {
                 return (
                   <motion.div 
                   initial={{backgroundColor: "#FFFFFF"}}
             whileHover={{  backgroundColor: "#DFE8F2" }}
-                  className=" p-[2vh] " key={index}>
-                    <div href={"/berita/" + notification.halaman} className=" font-bold  decoration-kuning decoration-2">
-                      {notification.headline}
+                  className=" p-[2vh] " key={notification.id}>
+                    <div  className=" font-bold  decoration-kuning decoration-2">
+                      {notification.title}
                     </div>
                     <div className="text-slate-500 text-sm ml-[1vw]">
-                      {notification.body}
+                      {notification.content}
                     </div>
                   </motion.div>
                 );

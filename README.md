@@ -87,3 +87,6 @@ edusafe/
 
 ## URL Laporan
 https://drive.google.com/drive/folders/1uBPdrFWQ9Cn4EAWuQxt27FGU5IRjE_ew?usp=sharing
+
+## URL Video
+https://drive.google.com/drive/folders/1oFcvjKK7inzrQ5yO1nRs2SnSsSTpLwqZ?usp=sharing
