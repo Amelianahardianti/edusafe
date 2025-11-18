@@ -40,6 +40,25 @@ export const listAll = async (req, res, next) => {
   }
 };
 
+export const list = async (req, res, next) => {
+  try {
+    const data = await ActivityChild.find()
+      .populate("ChildID", "name classId")      // ➜ ambil nama anak + id kelas
+      .populate({
+        path: "ChildID",
+        populate: { path: "classId", select: "name grade" } // ➜ ambil nama kelas
+      })
+      .populate("TeacherID", "name email")      // ➜ ambil nama guru
+      .sort({ createdAt: -1 });
+
+    res.json({ data });
+  } catch (e) {
+    next(e);
+  }
+};
+
+
+
 
 export const detail = async (req, res, next) => {
   try {

@@ -5,14 +5,17 @@ import * as ctrl from "../controllers/ActivityChild.controller.js";
 const r = Router();
 r.use(authMiddleware);
 
-r.get("/",roleRequired("teacher","admin"), ctrl.listMine);  //melihat aktivitas semua anak (teacher dan admin)
-r.get("/:id", ctrl.detail);  //melihat aktivitas satu anak (parent/teacher/admin)
-r.post("/", roleRequired("teacher","admin"), ctrl.create); //membuat catatan activitas anak
-r.patch("/:id", roleRequired("teacher","admin"), ctrl.update); //mengubah catatan aktivitas anak
-r.delete("/:id", roleRequired("teacher","admin"), ctrl.remove); //menghapus catatan aktivitas anak
 
+r.get("/", ctrl.list);  
 
+r.get("/mine", roleRequired("parent","teacher"), ctrl.listMine);
+
+r.get("/:id", ctrl.detail);
+
+r.post("/", roleRequired("teacher","admin"), ctrl.create);
+
+r.patch("/:id", roleRequired("teacher","admin"), ctrl.update);
+
+r.delete("/:id", roleRequired("teacher","admin"), ctrl.remove);
 
 export default r;
-
-
