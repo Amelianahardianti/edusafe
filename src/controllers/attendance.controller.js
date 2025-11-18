@@ -1,6 +1,9 @@
 import mongoose from "mongoose";
 import Attendance from "../models/Attendance.js";
 import { cacheDelPrefix } from "../middlewares/cache.js";
+import Class from "../models/Class.js";
+import Child from "../models/Child.js";
+
 
 
 /** Helper: normalisasi ke awal hari (UTC) untuk konsistensi unik harian */

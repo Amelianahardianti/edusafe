@@ -49,7 +49,7 @@ export default function AdminDashboard() {
                 Kelola data kelas dan wali kelas
               </p>
               <a
-                href="/daftarkelas"
+                href="/admin/daftarkelas"
                 className="text-blue-600 hover:text-blue-800 text-sm font-medium"
               >
                 Lihat →

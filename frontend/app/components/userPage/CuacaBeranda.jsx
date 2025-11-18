@@ -2,6 +2,8 @@
 import React, { useEffect, useState } from "react";
 import { motion }  from 'framer-motion';
 import weatherData from "../mockData/data_center";
+import Link from "next/link";
+
 
 const CuacaBeranda = ( {weather} ) => {
     const [currentTime, setCurrentTime] = useState(new Date());
@@ -61,13 +63,15 @@ const CuacaBeranda = ( {weather} ) => {
                     <div className="text-sm mt-1"> {formatDate()}</div>
                 </div>
                 <div className="mt-3 lg:mt-0"> 
+                <Link href="/parent/cuaca">
                     <motion.button
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                        className="bg-[#0B3869] rounded-lg px-4 py-2 text-white text-sm font-medium shadow-md hover:shadow-lg transition-shadow"
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    className="bg-[#0B3869] rounded-lg px-4 py-2 text-white text-sm font-medium shadow-md hover:shadow-lg transition-shadow"
                     >
-                        Lebih Lanjut 
+                    Lebih Lanjut
                     </motion.button>
+                </Link>
                 </div>
             </div>
             <div className="grid grid-cols-3 lg:grid-cols-6 font-bold text-center">

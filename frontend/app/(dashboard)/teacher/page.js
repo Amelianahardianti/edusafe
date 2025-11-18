@@ -22,7 +22,7 @@ export default function TeacherDashboard() {
           <div className="bg-white rounded-lg shadow-md p-6">
             <h3 className="text-lg font-semibold mb-2">Presensi Siswa</h3>
             <p className="text-gray-600 text-sm mb-4">Input dan kelola presensi siswa</p>
-            <a href="/teacher/attendance" className="text-blue-600 hover:text-blue-800 text-sm font-medium">
+            <a href="/teacher/kehadiran" className="text-blue-600 hover:text-blue-800 text-sm font-medium">
               Lihat →
             </a>
           </div>
@@ -30,7 +30,7 @@ export default function TeacherDashboard() {
           <div className="bg-white rounded-lg shadow-md p-6">
             <h3 className="text-lg font-semibold mb-2">Catatan Aktivitas</h3>
             <p className="text-gray-600 text-sm mb-4">Buat catatan aktivitas harian siswa</p>
-            <a href="/teacher/activities" className="text-blue-600 hover:text-blue-800 text-sm font-medium">
+            <a href="/teacher/aktivitas" className="text-blue-600 hover:text-blue-800 text-sm font-medium">
               Lihat →
             </a>
           </div>

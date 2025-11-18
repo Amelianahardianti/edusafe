@@ -37,7 +37,7 @@ export default function Tabel() {
           whileHover={{ scale: 1.1, backgroundColor: "#0B3869" }}
           whileTap={{ scale: 0.9, backgroundColor: "#608FC2" }}
           className="rounded-lg py-[1vh] px-[3vh] w-fit hover:underline text-white"
-          onClick={() => router.push("/buatakun")}
+          onClick={() => router.push("/admin/users/buatakun")}
         >
           Tambah Akun
         </motion.button>

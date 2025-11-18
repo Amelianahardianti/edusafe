@@ -54,7 +54,7 @@ const NotifBeranda = () => {
                     </div>
                   </motion.div>
                 );
-              })}<Link href="/notifikasi">
+              })}<Link href="/parent/notifikasi">
               <motion.div className='p-[2vh] border-t text-slate-500 rounded-b-md'
                 initial={{ backgroundColor: "#FFFFFF"}}
                 whileHover={{ backgroundColor: "#DFE8F2" }}
