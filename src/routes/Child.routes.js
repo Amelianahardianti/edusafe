@@ -13,5 +13,8 @@ r.get("/:id",      roleRequired("admin","teacher"), ctrl.detail);
 r.patch("/:id",    roleRequired("admin","teacher"), ctrl.update); //teacher bisa update data anak
 r.patch("/:id/transfer", roleRequired("admin"), ctrl.transfer);
 r.delete("/:id",   roleRequired("admin"),           ctrl.remove);
+r.patch("/:id/remove", roleRequired("admin"), ctrl.removeFromClass);
+
+
 
 export default r;

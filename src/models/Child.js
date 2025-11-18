@@ -5,7 +5,7 @@ const ChildSchema = new mongoose.Schema({
   name:      { type: String, required: true, trim: true },
   birthDate: { type: Date,   required: true },
   parentID:  { type: mongoose.Schema.Types.ObjectId, ref: "User",  required: true },
-  classId:   { type: mongoose.Schema.Types.ObjectId, ref: "Class", required: true }
+  classId:   { type: mongoose.Schema.Types.ObjectId, ref: "Class", required: false }
 }, { timestamps: true });
 
 ChildSchema.index({ classId: 1 });

@@ -1,0 +1,20 @@
+[33mac3643c[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m UPDATE: Landing page
+[33m3c255c9[m Merge branch 'main' of https://github.com/Amelianahardianti/edusafe
+[33m8a3f802[m UPDATE landing page
+[33mbd3a0ca[m ADD: NavbarMob userPage + minor fixes
+[33m518946b[m input absen
+[33m85d57e1[m[33m ([m[1;31morigin/rozan[m[33m)[m routing dibenerin
+[33m225a456[m hapus majment anak
+[33m915a5d5[m typo guru
+[33m8387dd3[m integrasi page manajemen akun
+[33m24e526c[m nambahin router put untuk update
+[33m9cd11fb[m benerin kapital U pada user.create
+[33mf167da8[m fix input kelas dan absensi navbar
+[33m6f04cb9[m integrasi input kelas ke backend
+[33mef4c879[m nambahin nampilin data kelas yang dituju dari /daftarkelas
+[33m19e55fd[m Merge branch 'main' of https://github.com/Amelianahardianti/edusafe
+[33m58a8507[m integrasi daftar kelas
+[33mcff32b6[m update href daftarkelas
+[33mfcd9933[m Absen semua di Admin
+[33me67fbe6[m feedback
+[33m58cc705[m benerin page notif, tombol delet dan input notif

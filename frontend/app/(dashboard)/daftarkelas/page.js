@@ -71,7 +71,7 @@ export default function DaftarKelasPage() {
   return (
     <div className="flex flex-col items-center gap-y-[2vh] py-[5vh]">
       <div className="flex justify-between w-[90vw]"> <h1 className="font-bold text-3xl">Daftar Kelas</h1>
-      <Link href="/inputkelasbaru">
+      <Link href="/admin/daftarkelas/inputkelasbaru">
        <motion.button 
                       initial = {{ backgroundColor: "#0D58AB"}}
                       whileHover={{ scale: 1.1 , backgroundColor: "#0B3869"}}

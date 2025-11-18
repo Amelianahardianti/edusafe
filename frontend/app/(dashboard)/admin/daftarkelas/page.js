@@ -93,7 +93,7 @@ export default function DaftarKelasPage() {
         {classes.map((cls) => (
           <div
           key={cls._id}
-          onClick={() => router.push(`/informasikelas?classId=${cls._id}`)}
+          onClick={() => router.push(`/admin/daftarkelas/informasikelas?classId=${cls._id}`)}
           className="cursor-pointer"
         >
           <NotificationSaranPage
