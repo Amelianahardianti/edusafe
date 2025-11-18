@@ -11,6 +11,8 @@ r.post("/", roleRequired("teacher","admin"), ctrl.create); //membuat catatan act
 r.patch("/:id", roleRequired("teacher","admin"), ctrl.update); //mengubah catatan aktivitas anak
 r.delete("/:id", roleRequired("teacher","admin"), ctrl.remove); //menghapus catatan aktivitas anak
 
+
+
 export default r;
 
 

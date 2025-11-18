@@ -115,7 +115,7 @@ export default function CreateAccount() {
     if (role === "parent") {
       payload.childName = childName;
       payload.childBirthDate = childBirthDate; // 'YYYY-MM-DD'
-      payload.childClass = childClass;         // kalau mau dipakai nanti
+      //payload.childClass = childClass;         // kalau mau dipakai nanti
     } 
 
     if (!role) {

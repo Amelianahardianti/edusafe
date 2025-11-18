@@ -64,36 +64,38 @@ export const detail = async (req, res, next) => {
 
 
 //membuat catatan aktivitas anak
-export const create = async (req, res, next) => {
+export const create = async (req, res) => {
   try {
-    const allowedActivities = [
-      "Senam Pagi",
-      "Kegiatan Bermain",
-      "Kegiatan Bercerita",
-      "Makan Siang",
-      "Jam Pulang"
-    ];
+    const {
+      ChildID,
+      Activity,
+      Date,
+      TimeStart,
+      TimeEnd,
+      AdditionalNotes
+    } = req.body;
 
-    if (!allowedActivities.includes(req.body.Activity)) {
-      return res.status(400).json({ message: "Activity tidak valid" });
+    if (!ChildID || !Activity || !TimeStart || !TimeEnd) {
+      return res.status(400).json({ msg: "Missing required fields" });
     }
 
-    const payload = {
-      ChildID: req.body.ChildID,
-      TeacherID: req.user.sub,                     // dari JWT
-      Activity: req.body.Activity,
-      Date: req.body.Date ? new Date(req.body.Date) : new Date(),
-      TimeStart: req.body.TimeStart,
-      TimeEnd: req.body.TimeEnd,
-      AdditionalNotes: req.body.AdditionalNotes
-    };
+    const doc = await ActivityChild.create({
+      ChildID,
+      Activity,
+      TeacherID: req.user.sub,
+      Date,
+      TimeStart,
+      TimeEnd,
+      AdditionalNotes
+    });
 
-    const item = await ActivityChild.create(payload);
-    res.status(201).json({ message: "Created", data: item });
+    res.status(201).json(doc);
   } catch (err) {
-    res.status(400).json({ message: "Gagal buat activity", error: err.message });
+    console.error(err);
+    res.status(500).json({ msg: "Server error" });
   }
 };
+
 
 //mengubah catatan aktivitas anak
 export const update = async (req, res, next) => {

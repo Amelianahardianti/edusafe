@@ -3,7 +3,6 @@ import { authMiddleware, roleRequired } from "../middlewares/authMiddleware.js";
 
 //model data catatan anak / Daily log
 
-
 const ActivityChildSchema = new mongoose.Schema({
   ChildID: { type: mongoose.Schema.Types.ObjectId, ref: 'Child', required: true },
   Activity: {type: String, enum: [ "Senam Pagi","Kegiatan Bermain","Kegiatan Bercerita","Makan Siang","Jam Pulang"], required: true},

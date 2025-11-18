@@ -51,10 +51,15 @@ export const list = async (req, res, next) => {
     if (parentId && isObjectId(parentId)) q.parentID = parentId;
 
     if (req.user.role === "teacher") {
-      const classes = await Class.find({ homeroomTeacherID: req.user.sub }).select("_id");
-      const ids = classes.map(c => c._id);
+      const classes = await Class.find({
+        homeroomTeacherIDs: { $in: [req.user.sub] }
+      }).select("_id");
+
+      const ids = classes.map((c) => c._id);
+
       q.classId = q.classId ? q.classId : { $in: ids };
     }
+
 
     const rows = await Child.find(q)
       .sort({ createdAt: -1 })
