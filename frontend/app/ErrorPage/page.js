@@ -3,7 +3,7 @@
 import Navbar from "@/app/components/userPage/NavbarDesktop";
 import Image from "next/image";
 import Link from "next/link";
-import Forbidden from "@/app/components/userPage/forbidden";
+import Forbidden from "@/app/components/userPage/Forbidden";
 
 export default function NotFoundPage(){
     return(
