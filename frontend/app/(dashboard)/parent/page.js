@@ -1,16 +1,57 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import ActivityBeranda from '@/app/components/userPage/ActivityBeranda';
 import NotifBeranda from '@/app/components/userPage/NotifBeranda';
 import { motion } from 'framer-motion';
 import TabelBeranda from '@/app/components/userPage/TabelBeranda';
 import CuacaBeranda from '@/app/components/userPage/CuacaBeranda';
+import { apiFetch } from '@/lib/api';
 
 export default function ParentDashboard() {
+  const [latestActivity, setLatestActivity] = useState(null);
+  const [loadingActivity, setLoadingActivity] = useState(true);
+
+  useEffect(() => {
+    const load = async () => {
+      try {
+        const data = await apiFetch('/api/activitychildren/my');
+        const list = data?.activities || [];
+        if (list.length === 0) {
+          setLatestActivity(null);
+        } else {
+          const a = list[0];
+          const formattedDate = a.Date
+            ? new Date(a.Date).toLocaleDateString('id-ID', {
+                weekday: 'long',
+                day: '2-digit',
+                month: 'long',
+                year: 'numeric',
+              })
+            : '';
+          setLatestActivity({
+            name: a.ChildID?.name || 'Anak',
+            type: a.Activity || 'Aktivitas',
+            text: a.AdditionalNotes || '',
+            date: formattedDate,
+            time_from: a.TimeStart,
+            time_to: a.TimeEnd,
+            sender: a.TeacherID?.name || 'Guru',
+          });
+        }
+      } catch (error) {
+        console.error(error);
+        setLatestActivity(null);
+      } finally {
+        setLoadingActivity(false);
+      }
+    };
+    load();
+  }, []);
+
   return (
     <div className="min-h-screen bg-[#F5F7FA]">
       <main className="px-6 sm:px-8 lg:px-12 py-8">
-        {/* Header Section */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -25,9 +66,7 @@ export default function ParentDashboard() {
           </p>
         </motion.div>
 
-        {/* Main Grid Layout */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-          {/* Left Column - Notifications */}
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
@@ -37,7 +76,6 @@ export default function ParentDashboard() {
             <NotifBeranda />
           </motion.div>
 
-          {/* Middle Column - Activity */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -45,20 +83,29 @@ export default function ParentDashboard() {
             className="lg:col-span-6 flex justify-center"
           >
             <div className="w-full max-w-2xl">
-              <ActivityBeranda 
-                name="MULAT ADI"
-                type="Kelas"
-                text="Melakukan Kelas Matematika"
-                date="Rabu, 26 Oktober 2025"
-                time_from="07.00"
-                time_to="08.30"
-                sender="Ir. Lorem Ipsum S.Pd.Fil"
-                style="w-full h-auto"
-              />
+              {loadingActivity ? (
+                <div className="bg-white rounded-lg shadow p-6 text-center text-gray-600">
+                  Memuat aktivitas anak...
+                </div>
+              ) : !latestActivity ? (
+                <div className="bg-white rounded-lg shadow p-6 text-center text-gray-600">
+                  Belum ada catatan aktivitas untuk anak Anda.
+                </div>
+              ) : (
+                <ActivityBeranda
+                  name={latestActivity.name}
+                  type={latestActivity.type}
+                  text={latestActivity.text}
+                  date={latestActivity.date}
+                  time_from={latestActivity.time_from}
+                  time_to={latestActivity.time_to}
+                  sender={latestActivity.sender}
+                  style="w-full h-auto"
+                />
+              )}
             </div>
           </motion.div>
 
-          {/* Right Column - Weather & Attendance */}
           <motion.div
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
@@ -75,4 +122,3 @@ export default function ParentDashboard() {
     </div>
   );
 }
-

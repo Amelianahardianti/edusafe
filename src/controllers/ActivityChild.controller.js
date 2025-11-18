@@ -1,17 +1,38 @@
 import ActivityChild from "../models/ActivityChild.js";
+import Child from "../models/Child.js";
 
-// orang tua bisa lihat catatan anaknya
-// guru bisa lihat catatan anak yang diajar
+export const listMyChildrenActivities = async (req, res, next) => {
+  try {
+    const parentId = req.user.sub;
+
+    const children = await Child.find({ parentID: parentId }).select("_id name");
+    const childIds = children.map((c) => c._id);
+
+    if (childIds.length === 0) {
+      return res.json({ activities: [] });
+    }
+    const activities = await ActivityChild.find({
+      ChildID: { $in: childIds },
+    })
+      .populate("ChildID", "name")
+      .populate("TeacherID", "name")
+      .sort({ Date: -1, TimeStart: -1 });
+
+    res.json({ activities });
+  } catch (err) {
+    next(err);
+  }
+};
+
 
 export const listMine = async (req, res, next) => {
   try {
-    const { role, sub: userId, childIDs = [] } = req.user; // gunakan "childIDs" konsisten
+    const { role, sub: userId, childIDs = [] } = req.user; 
     const q = {};
 
     if (role === "teacher") q.TeacherID = userId;
     else if (role === "parent") q.ChildID = { $in: childIDs };
 
-    // admin: bisa override filter
     if (req.query.ChildID) q.ChildID = req.query.ChildID;
 
     if (req.query.from || req.query.to) {
