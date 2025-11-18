@@ -32,11 +32,23 @@ export const create = async (req, res, next) => {
     const normalized = normalizeDateToUTCStart(date);
     const teacherID = req.user?.sub || req.user?._id || req.user?.id;
 
+    let checkInTime = status === "hadir" ? (checkIn ? new Date(checkIn) : new Date()) : undefined;
+    
+    // Validasi jam check-in (7-8 pagi)
+    if (checkInTime && status === "hadir") {
+      const hour = checkInTime.getHours();
+      if (hour < 7 || hour >= 8) {
+        return res.status(400).json({ 
+          msg: "Check-in hanya diperbolehkan antara jam 7:00 - 8:00 pagi" 
+        });
+      }
+    }
+
     const doc = await Attendance.create({
       childID: new mongoose.Types.ObjectId(childID),
       date: normalized,
       status,
-      checkIn: status === "hadir" ? (checkIn ? new Date(checkIn) : new Date()) : undefined,
+      checkIn: checkInTime,
       teacherID,
     });
     await cacheDelPrefix(`/api/attendance/recap/weekly/${String(childID)}`);
@@ -60,17 +72,55 @@ export const update = async (req, res, next) => {
   } catch (e) { next(e); }
 };
 
+/** Checkout manual */
+export const checkout = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const row = await Attendance.findById(id);
+    
+    if (!row) return res.status(404).json({ msg: "Attendance not found" });
+    if (row.checkOut) return res.status(400).json({ msg: "Already checked out" });
+    if (!row.checkIn) return res.status(400).json({ msg: "Cannot checkout without check-in" });
+
+    // Set checkout time (variasi antara 15:00-16:00)
+    const now = new Date();
+    const checkOutVariations = [15, 15.5, 16]; // jam 3, 3:30, 4 sore
+    const randomCheckout = checkOutVariations[Math.floor(Math.random() * checkOutVariations.length)];
+    
+    const checkoutTime = new Date(now);
+    checkoutTime.setHours(Math.floor(randomCheckout));
+    checkoutTime.setMinutes((randomCheckout % 1) * 60);
+    checkoutTime.setSeconds(0);
+    
+    row.checkOut = checkoutTime;
+    await row.save();
+    
+    res.json(row);
+  } catch (e) { 
+    next(e); 
+  }
+};
+
 /** List attendance per child */
 export const listByChild = async (req, res, next) => {
   try {
     const { role, childIDs = [] } = req.user || {};
     const { childId } = req.params;
 
+    // Validate ObjectId
+    if (!mongoose.Types.ObjectId.isValid(childId)) {
+      return res.status(400).json({ msg: "Invalid childId" });
+    }
+
     // orang tua hanya boleh lihat anaknya sendiri
     if (role === "parent" && !childIDs.map(String).includes(String(childId))) {
       return res.status(403).json({ msg: "forbidden" });
     }
-    const rows = await Attendance.find({ childID: childId }).sort({ date: -1 });
+    const rows = await Attendance.find({ childID: childId })
+      .sort({ date: -1 })
+      .populate("childID", "name")
+      .populate("teacherID", "name")
+      .lean();
     res.json(rows);
   } catch (e) { next(e); }
 };

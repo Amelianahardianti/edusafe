@@ -13,5 +13,6 @@ r.get("/child/:childId", ctrl.listByChild);
 r.get("/recap/weekly/:childId", cacheFor(600), cacheGet, cacheSet, ctrl.recapWeekly);
 r.post("/", roleRequired("admin", "teacher"), ctrl.create);
 r.put("/:id", roleRequired("admin", "teacher"), ctrl.update);
+r.post("/:id/checkout", roleRequired("admin", "teacher"), ctrl.checkout);
 
 export default r;
