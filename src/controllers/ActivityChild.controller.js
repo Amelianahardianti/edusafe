@@ -27,11 +27,27 @@ export const listMyChildrenActivities = async (req, res, next) => {
 
 export const listMine = async (req, res, next) => {
   try {
+<<<<<<< Updated upstream
     const { role, sub: userId, childIDs = [] } = req.user; 
     const q = {};
 
     if (role === "teacher") {
       q.TeacherID = userId;
+=======
+    const { role, sub: userId, childIDs = [] } = req.user;
+    const q = {};
+
+    if (role === "teacher") q.TeacherID = userId;
+    else if (role === "parent") {
+      const children = await Child.find({ parentID: userId }).select("_id");
+      const childIds = children.map((c) => c._id);
+
+      if (childIds.length === 0) {
+        return res.json({ data: [] });
+      }
+
+      q.ChildID = { $in: childIds };
+>>>>>>> Stashed changes
     }
 
     if (req.query.ChildID) q.ChildID = req.query.ChildID;
