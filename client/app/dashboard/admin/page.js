@@ -33,19 +33,6 @@ export default function AdminDashboard() {
             Lihat →
           </a>
         </Card>
-
-        <Card>
-          <h3 className="text-lg font-semibold mb-2">Manajemen Anak</h3>
-          <p className="text-gray-600 text-sm mb-4">
-            Kelola data anak didik
-          </p>
-          <a
-            href="/admin/children"
-            className="text-blue-600 hover:text-blue-800 text-sm font-medium"
-          >
-            Lihat →
-          </a>
-        </Card>
       </div>
     </DashboardLayout>
   );
