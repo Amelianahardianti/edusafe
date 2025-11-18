@@ -41,7 +41,6 @@ export default function LandingPage() {
         {/* NAV LINKS */}
         <div className="flex items-center gap-[40px] font-nunito text-white font-bold text-[21px]">
           <Link href="#cta" className="hover:text-[#50B0E5] transition">About Us</Link>
-          <Link href="#articles" className="hover:text-[#50B0E5] transition">Articles</Link>
         </div>
       </nav>
 
