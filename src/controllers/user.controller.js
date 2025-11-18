@@ -28,7 +28,7 @@ export const create = async (req, res) => {
     }
 
     const hash = await bcrypt.hash(password, 10);
-    const u = await user.create({
+    const u = await User.create({
       name,
       email: email.trim().toLowerCase(),
       password: hash,
@@ -42,7 +42,8 @@ export const create = async (req, res) => {
     if (error.code === 11000) {
       return res.status(400).json({ msg: "email already exists" });
     }
-    throw error;
+    console.error(error);
+    return res.status(500).json({ msg: "server error" });
   }
 };
 
@@ -84,7 +85,6 @@ export const getAccounts = async (req, res) => {
 
     const combined = await Promise.all(
       users.map(async (u) => {
-        // hanya parent yang bisa punya anak
         const children =
           u.role === "parent"
             ? await Child.find({ parentID: u._id })
