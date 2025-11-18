@@ -2,9 +2,14 @@
 
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
+import {useRouter} from 'next/navigation';
+import { useAuthGuard } from "@/hooks/useAuthGuard";
+import LoadingOverlay from "../../../components/LoadingOverlay";
 
 export default function Tabel() {
   const [accounts, setAccounts] = useState([]);
+    const { user, loading } = useAuthGuard('admin');
+    const router = useRouter();
 
         useEffect(() => {
         fetch("http://localhost:4000/api/users/accounts", {
@@ -13,12 +18,14 @@ export default function Tabel() {
         })
             .then((res) => res.json())
             .then((data) => {
-            console.log("DATA DARI API:", data); // 🔥 CEK ISINYA
+            console.log("DATA DARI API:", data);
             setAccounts(data);
             });
         }, []);
 
-
+        if (loading) {
+          return <LoadingOverlay />;
+        }
 
   return (
     <div className="flex flex-col justify-center p-[5vh] w-[90vw]">
@@ -30,6 +37,7 @@ export default function Tabel() {
           whileHover={{ scale: 1.1, backgroundColor: "#0B3869" }}
           whileTap={{ scale: 0.9, backgroundColor: "#608FC2" }}
           className="rounded-lg py-[1vh] px-[3vh] w-fit hover:underline text-white"
+          onClick={() => router.push("/buatakun")}
         >
           Tambah Akun
         </motion.button>
@@ -76,6 +84,15 @@ export default function Tabel() {
             whileHover={{ scale: 1.1, backgroundColor: "#0B3869" }}
             whileTap={{ scale: 0.9, backgroundColor: "#608FC2" }}
             className="rounded-lg p-[1vh] w-[80%] hover:underline text-white"
+            onClick={() => {
+              if (acc.role === "parent") {
+                router.push(`/editparent?id=${acc.id}`);
+              } else if (acc.role === "teacher") {
+                router.push(`/editteacher?id=${acc.id}`);
+              } else {
+                alert("Tidak bisa edit admin!");
+              }
+            }}
           >
             Edit
           </motion.button>

@@ -2,8 +2,13 @@
 "use client";
 import React from "react";
 import FormContainer from "../../components/userPage/FormContainer";
+import { useRouter, useSearchParams } from "next/navigation";
+import { apiFetch } from "@/lib/api";
 
 export default function Page() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const accountId = searchParams.get("id"); 
   const parentFields = [
     { id: "parentName", label: "Nama Wali", type: "text", placeholder: "Select" },
     { id: "childName", label: "Nama Anak / Murid", type: "text", placeholder: "Select" },
@@ -21,20 +26,44 @@ export default function Page() {
     },
   ];
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!accountId) {
+      alert("ID akun tidak ditemukan di URL");
+      return;
+    }
+
     const values = {};
     parentFields.forEach((f) => {
       const el = document.getElementById(f.id);
-      values[f.id] = el ? el.value : null;
+      values[f.id] = el ? el.value : "";
     });
-    // replace with API call as needed
-    console.log("Parent form submitted:", values);
+
+    try {
+      await apiFetch(`/api/users/${accountId}`, {
+        method: "PUT",
+        body: JSON.stringify({
+          role: "parent",
+          name: values.parentName,
+          email: values.email,
+          password: values.password || undefined,
+          childName: values.childName,
+          schoolYear: values.schoolYear,
+        }),
+      });
+      
+
+      alert("Akun orang tua berhasil diupdate");
+      router.push("/admin/users");
+    } catch (err) {
+      console.error(err);
+      alert(err.message || "Gagal menyimpan perubahan akun orang tua");
+    }
   };
 
   return <FormContainer title="Edit Akun Orang Tua" fields={parentFields} onSubmit={handleSubmit} />;
 }
 
 
-// File: /app/edit-teacher/page.js
 

@@ -3,11 +3,15 @@
 import { useState, useEffect } from "react";
 import FormContainer from "../../components/userPage/FormContainer";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { apiFetch } from "@/lib/api";
 
 export default function CreateAccount() {
   const [selectedRole, setSelectedRole] = useState("");
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+  const router = useRouter();
 
-  // field dasar (tanpa role & field anak)
   const baseFields = [
     {
       id: "name",
@@ -19,7 +23,7 @@ export default function CreateAccount() {
       id: "email",
       label: "Email",
       type: "text",
-      placeholder: "john.doe@gmail.com",
+      placeholder: "example@gmail.com",
     },
     {
       id: "phoneNumber",
@@ -41,7 +45,6 @@ export default function CreateAccount() {
     },
   ];
 
-  // field tambahan khusus orang tua
   const parentExtraFields = [
     {
       id: "childClass",
@@ -67,7 +70,6 @@ export default function CreateAccount() {
     },
   ];
 
-  // role field SELALU ada dan dirender di DALAM FormContainer
   const fields = [
     {
       id: "role",
@@ -82,7 +84,6 @@ export default function CreateAccount() {
     ...baseFields,
   ];
 
-  // "nguping" perubahan select role yang dirender oleh FormContainer
   useEffect(() => {
     const roleSelect = document.getElementById("role");
     if (!roleSelect) return;
@@ -97,11 +98,70 @@ export default function CreateAccount() {
     };
   }, []);
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError("");
+    setSuccess("");
+
+    const form = e.target;
+
+    const role = form.role.value;
+    const name = form.name.value.trim();
+    const email = form.email.value.trim().toLowerCase();
+    const phoneNumber = form.phoneNumber?.value.trim();
+    const password = form.password.value;
+    const confirmPassword = form.confirmPassword.value;
+
+    const childClass = form.childClass?.value || "";
+    const childName = form.childName?.value.trim() || "";
+    const childBirthDate = form.childBirthDate?.value || "";
+
+    if (!role) {
+      setError("Role wajib dipilih");
+      return;
+    }
+    if (!name || !email || !password || !confirmPassword) {
+      setError("Nama, email, dan password wajib diisi");
+      return;
+    }
+    if (password !== confirmPassword) {
+      setError("Password dan konfirmasi password tidak sama");
+      return;
+    }
+
+    try {
+      const newUser = await apiFetch("/api/users", {
+        method: "POST",
+        body: JSON.stringify({
+          name,
+          email,
+          password,
+          role,
+        }),
+      });
+
+      console.log("User created:", newUser);
+
+
+      setSuccess("Akun berhasil dibuat");
+      form.reset();
+      setSelectedRole("");
+
+      router.push("/admin/users");
+    } catch (err) {
+      console.error(err);
+      setError(err.message || "Gagal membuat akun");
+    }
+  };
+
   return (
     <div className="flex flex-col items-center mt-[10vh] ml-[10vh]">
       <FormContainer
         title="Buat Akun"
         fields={fields}
+        onSubmit={handleSubmit}
+        error={error}
+        success={success}
       />
     </div>
   );
