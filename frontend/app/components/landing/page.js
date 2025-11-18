@@ -11,7 +11,10 @@ export default function LandingPage() {
     <div className="relative  min-h-screen overflow-hidden">
 
       {/* Background Image */}
-      <div className=" fixed inset-0 -z-10 w-screen h-screen overflow-hidden">
+      <motion.div className=" fixed inset-0 -z-10 w-screen h-screen overflow-hidden"
+        initial={{ scale: 1.1 }}
+        animate={{ scale: 1 }}
+        transition={{ duration: 0.65 , ease: "easeOut" }}>
         <Image
           src="/assets/images/kindergarten.png"
           alt="Children in a classroom setting"
@@ -23,12 +26,17 @@ export default function LandingPage() {
           className=" w-full h-full absolute object-cover object-[center top] "
         />
         <div className="absolute inset-0 bg-black/30"></div>
-      </div>
+      </motion.div>
 
 
       {/* = NAVBAR = */}
       <nav className="top-0 left-0 w-full h-[139px] flex items-center justify-between px-[41px] z-20">
-        
+        <motion.div
+          initial={{ x: -50, opacity: 0 }}
+          animate={{ x: 0, opacity: 1 }}
+          transition={{ duration: 0.65, ease: "easeOut" }}
+        >
+       
         {/* LOGO */}
         <Image
           src="/assets/svg/logo.svg"
@@ -37,11 +45,16 @@ export default function LandingPage() {
           height={87}
           className="w-[77px] h-[87px]"
         />
+         </motion.div>
 
         {/* NAV LINKS */}
-        <div className="flex items-center gap-[40px] font-nunito text-white font-bold text-[21px]">
+        <motion.div 
+        initial={{ x: 50, opacity: 0 }}
+        animate={{ x: 0, opacity: 1 }}
+        transition={{ duration: 0.65, ease: "easeOut" }}
+        className="flex items-center gap-10 font-nunito text-white font-bold text-[21px]">
           <Link href="#cta" className="hover:text-[#50B0E5] transition">About Us</Link>
-        </div>
+        </motion.div>
       </nav>
 
       {/* = HERO CONTENT = */}
@@ -50,13 +63,15 @@ export default function LandingPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-[1vh] max-w-7xl w-full px-[41px] ">
 
           {/* LEFT — HERO TITLE */}
-          <div className="flex flex-col md:items-start items-center  ">
-            <h1
+          <div className="flex flex-col md:items-start items-center overflow-hidden"> 
+            <motion.h1
               className="text-white text-[60px] lg:text-[88px] lg:text-left text-center font-bold "
-              
+              initial={{ x: 50, opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              transition={{ duration: 0.65, ease: "easeOut" }}
             >
               Welcome to<br />EduSafe.
-            </h1>
+            </motion.h1>
 
             <Link href="/login" className="no-underline">
             <motion.button
@@ -73,7 +88,11 @@ export default function LandingPage() {
           </div>
 
           {/* RIGHT — HERO TEXT */}
-          <div className="text-white font-nunito font-bold text-[25px] leading-[37.5px] text-justify max-w-[699px]">
+          <motion.div className="text-white font-nunito font-bold text-[25px] leading-[37.5px] text-justify max-w-[699px]"
+            initial={{ x: -50, opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            transition={{ duration: 0.65, ease: "easeOut" }}
+          >
             <p>
               Edusafe hadir untuk mendekatkan guru dan orang tua dalam mendampingi tumbuh kembang anak di sekolah.
               Melalui pencatatan aktivitas harian, kehadiran, dan komunikasi yang terpusat, setiap momen kecil anak
@@ -84,7 +103,7 @@ export default function LandingPage() {
               Dengan informasi yang cepat, jelas, dan aman, Edusafe membantu orang tua merasa tenang,
               dan guru merasa lebih didukung dalam perannya.
             </p>
-          </div>
+          </motion.div>
         </div>
       </section>
 
@@ -92,9 +111,13 @@ export default function LandingPage() {
       <section id="whyus" className="bg-white py-24 sm:py-32 font-jakartasans">
         <div className="max-w-7xl mx-auto px-[41px]">
 
-          <h2 className="text-center font-semibold text-6xl lg:text-7xl text-brand-blue-dark tracking-tight">
+          <motion.h2 
+           initial={{ y: 50, opacity: 0 }}
+              whileInView={{ y: 0, opacity: 1 }}
+              transition={{ duration: 0.65, ease: "easeOut" }}
+          className="text-center font-semibold text-6xl lg:text-7xl text-brand-blue-dark tracking-tight">
             Why Us?
-          </h2>
+          </motion.h2>
 
           <div className="mt-20 grid md:grid-cols-3 gap-12">
             {[
@@ -114,13 +137,17 @@ export default function LandingPage() {
                 desc: "Aplikasi didesain agar mudah digunakan oleh siapa pun tanpa pelatihan."
               },
             ].map((item, i) => (
-              <div key={i} className="text-center">
+              <motion.div key={i} className="text-center"
+                initial={{ y: 50, opacity: 0 }}
+                whileInView={{ y: 0, opacity: 1 }}
+                transition={{ duration: 0.65, ease: "easeOut" }}
+              >
                 <Image
                   src={item.img}
                   alt={item.title}
                   width={600}
                   height={400}
-                  className="w-full h-[320px] object-cover rounded-xl shadow-lg"
+                  className="w-full h-[40vh] object-cover rounded-xl shadow-lg"
                 />
 
                 <h3 className="mt-8 font-bold text-4xl text-brand-blue-dark">
@@ -129,7 +156,7 @@ export default function LandingPage() {
                 <p className="mt-4 text-2xl text-brand-blue-dark max-w-sm mx-auto">
                   {item.desc}
                 </p>
-              </div>
+              </motion.div>
             ))}
           </div>
         </div>
@@ -137,7 +164,11 @@ export default function LandingPage() {
 
       {/* = CTA SECTION = */}
       <section id="cta" className="bg-white py-28 font-jakartasans">
-        <div className="max-w-7xl mx-auto px-[41px] grid lg:grid-cols-2 gap-16 items-center">
+        <motion.div
+         initial={{ x: -50, opacity: 0 }}
+              whileInView={{ x: 0, opacity: 1 }}
+              transition={{ duration: 0.65, ease: "easeOut" }}
+        className="max-w-7xl mx-auto px-[41px] grid lg:grid-cols-2 gap-16 items-center">
 
           <Image
             src="/assets/images/selamatdatang.png"
@@ -147,7 +178,11 @@ export default function LandingPage() {
             className="object-contain"
           />
 
-          <div className="space-y-6">
+          <motion.div
+          initial={{ x: -50, opacity: 0 }}
+              whileInView={{ x: 0, opacity: 1 }}
+              transition={{ duration: 0.65, delay: 0.1, ease: "easeOut" }}
+          className="space-y-6">
             <h2 className="font-bold text-5xl text-brand-blue-dark">Selamat Datang di Sekolah Kami</h2>
 
             <p className="text-2xl text-brand-blue-dark leading-relaxed">
@@ -170,8 +205,8 @@ export default function LandingPage() {
              </motion.div>
             </motion.button>
             </Link>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
       </section>
 
     </div>
