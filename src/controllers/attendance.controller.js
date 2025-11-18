@@ -104,7 +104,7 @@ export const checkout = async (req, res, next) => {
 /** List attendance per child */
 export const listByChild = async (req, res, next) => {
   try {
-    const { role, childIDs = [] } = req.user || {};
+    const { role, sub: userId } = req.user || {};
     const { childId } = req.params;
 
     // Validate ObjectId
@@ -112,10 +112,18 @@ export const listByChild = async (req, res, next) => {
       return res.status(400).json({ msg: "Invalid childId" });
     }
 
-    // orang tua hanya boleh lihat anaknya sendiri
-    if (role === "parent" && !childIDs.map(String).includes(String(childId))) {
-      return res.status(403).json({ msg: "forbidden" });
+    // orang tua hanya boleh lihat anaknya sendiri - cek dari database
+    if (role === "parent") {
+      const child = await Child.findById(childId).select("parentID").lean();
+      if (!child) {
+        return res.status(404).json({ msg: "Child not found" });
+      }
+      // Cek apakah child ini milik parent yang sedang login
+      if (String(child.parentID) !== String(userId)) {
+        return res.status(403).json({ msg: "forbidden" });
+      }
     }
+    
     const rows = await Attendance.find({ childID: childId })
       .sort({ date: -1 })
       .populate("childID", "name")
@@ -180,13 +188,18 @@ export const listAll = async (req, res, next) => {
 export const listForTeacher = async (req, res, next) => {
   try {
     const teacherId = req.user.sub;
+    console.log("🧑‍🏫 Teacher ID:", teacherId);
 
     // cari kelas yang dia ampu
     const classes = await Class.find({
       homeroomTeacherIDs: teacherId
     }).lean();
 
+    console.log("📚 Classes found for teacher:", classes.length);
+    console.log("Classes:", classes.map(c => ({ id: c._id, name: c.name })));
+
     if (!classes.length) {
+      console.log("⚠️ Teacher tidak punya kelas, return empty");
       return res.json([]); // teacher belum punya kelas
     }
 
@@ -194,6 +207,8 @@ export const listForTeacher = async (req, res, next) => {
     const childIds = await Child.find({
       classID: { $in: classes.map(c => c._id) }
     }).distinct("_id");
+
+    console.log("👶 Children IDs in teacher's classes:", childIds.length);
 
     // ambil attendance anak
     const rows = await Attendance.find({
@@ -203,8 +218,10 @@ export const listForTeacher = async (req, res, next) => {
       .populate("teacherID", "name")
       .sort({ date: -1 });
 
+    console.log("📋 Attendance records found:", rows.length);
     res.json(rows);
   } catch (e) {
+    console.error("❌ Error in listForTeacher:", e);
     next(e);
   }
 };

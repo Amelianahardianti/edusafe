@@ -227,7 +227,7 @@ export default function Tabel() {
     }
   }
 
-  async function handleShowWeekly(childId, childName) {
+  async function handleShowWeekly(childId, childName, clickedDate = null) {
     // Validasi childId sebelum membuka modal
     if (!childId) {
       alert("Data anak tidak valid.");
@@ -244,12 +244,24 @@ export default function Tabel() {
       const result = await apiFetch(`/api/attendance/child/${childId}`);
       const childAttendance = Array.isArray(result) ? result : result.data || [];
       
-      // Get current week's Monday-Friday
-      const today = new Date();
-      const currentDay = today.getDay();
+      // Jika ada data attendance, ambil data TERBARU untuk menentukan minggu
+      // Atau gunakan tanggal yang diklik
+      let referenceDate = clickedDate ? new Date(clickedDate) : new Date();
+      
+      // Jika tidak ada clickedDate, gunakan tanggal attendance terbaru
+      if (!clickedDate && childAttendance.length > 0) {
+        // Sort dan ambil yang terbaru
+        const sortedAttendance = [...childAttendance].sort((a, b) => 
+          new Date(b.date) - new Date(a.date)
+        );
+        referenceDate = new Date(sortedAttendance[0].date);
+      }
+      
+      // Get week's Monday-Friday based on reference date
+      const currentDay = referenceDate.getDay();
       const diff = currentDay === 0 ? -6 : 1 - currentDay;
-      const monday = new Date(today);
-      monday.setDate(today.getDate() + diff);
+      const monday = new Date(referenceDate);
+      monday.setDate(referenceDate.getDate() + diff);
       
       const weekDays = [];
       for (let i = 0; i < 5; i++) {
@@ -448,7 +460,8 @@ export default function Tabel() {
                       }
                       
                       if (childId) {
-                        handleShowWeekly(childId, childName);
+                        // Pass tanggal attendance agar weekly view menampilkan minggu dari tanggal tersebut
+                        handleShowWeekly(childId, childName, item.date);
                       } else {
                         console.error("Tidak bisa mendapatkan childID:", {
                           childID: item.childID,
@@ -604,8 +617,13 @@ export default function Tabel() {
       {isWeeklyModalOpen && (
         <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
           <div className="bg-white p-6 w-[600px] rounded-xl shadow-lg">
-            <h2 className="text-xl font-bold mb-2">Kehadiran Mingguan</h2>
-            <p className="text-gray-600 mb-6">{selectedChildWeekly?.name}</p>
+            <h2 className="text-xl font-bold mb-1">Kehadiran Mingguan</h2>
+            <p className="text-gray-700 font-medium mb-1">{selectedChildWeekly?.name}</p>
+            {weeklyData.length > 0 && (
+              <p className="text-sm text-gray-500 mb-4">
+                {weeklyData[0].date.toLocaleDateString("id-ID", { day: "numeric", month: "long" })} - {weeklyData[4].date.toLocaleDateString("id-ID", { day: "numeric", month: "long", year: "numeric" })}
+              </p>
+            )}
 
             {loadingWeekly ? (
               <div className="text-center py-8">

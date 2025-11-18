@@ -70,10 +70,18 @@ export const list = async (req, res, next) => {
 
 export const listMy = async (req, res, next) => {
   try {
-    const rows = await Child.find({ parentID: req.user.sub })
+    const parentId = req.user.sub;
+    console.log("[Child.listMy] Parent ID:", parentId);
+    console.log("[Child.listMy] User:", req.user);
+    
+    const rows = await Child.find({ parentID: parentId })
       .sort({ createdAt: -1 })
       .populate("classId", "name grade")
       .lean();
+    
+    console.log("[Child.listMy] Found children:", rows.length);
+    console.log("[Child.listMy] Children:", rows);
+    
     res.json(rows);
   } catch (e) { next(e); }
 };
@@ -103,6 +111,14 @@ export const update = async (req, res, next) => {
     const allowed = ["name", "birthDate"];
     const update = {};
     for (const k of allowed) if (k in req.body) update[k] = req.body[k];
+    
+    // Admin bisa update parentID
+    if (req.user.role === "admin" && req.body.parentID) {
+      if (!isObjectId(req.body.parentID)) {
+        return res.status(400).json({ msg: "parentID invalid" });
+      }
+      update.parentID = req.body.parentID;
+    }
 
     if (update.birthDate) {
       const b = new Date(update.birthDate);
